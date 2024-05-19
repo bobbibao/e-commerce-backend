@@ -44,6 +44,9 @@ public class User implements Serializable {
 
 	@Column(name = "password")
 	private String password;
+	
+	@Column(name = "role")
+	private String role;
 
 	@Column(name = "user_image")
 	private String userImage;

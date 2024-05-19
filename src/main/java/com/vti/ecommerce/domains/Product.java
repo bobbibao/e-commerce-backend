@@ -1,12 +1,14 @@
 package com.vti.ecommerce.domains;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 import com.vti.ecommerce.domains.enumeration.ProductCategory;
 import com.vti.ecommerce.domains.enumeration.ProductGender;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
@@ -17,6 +19,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -71,8 +74,10 @@ public class Product implements Serializable {
 
 	@Column(name = "total_review_count")
 	private int totalReviewCount;
-	
 
+	@Column(name = "product_date")
+	private LocalDate productDate;
+	
 	@Column(name = "brand_name")
 	private String brandName;
 	
@@ -86,7 +91,7 @@ public class Product implements Serializable {
 	
 
 	@ElementCollection
-//	@CollectionTable(name = "prices", joinColumns = @JoinColumn(name = "product_id"))
+	@CollectionTable(name = "prices", joinColumns = @JoinColumn(name = "product_id"))
 	@Column(name = "prices", nullable = false)
 	@Embedded
 	private List<Price> prices;
@@ -94,7 +99,7 @@ public class Product implements Serializable {
 
 
 	@ElementCollection
-//	@CollectionTable(name = "prices", joinColumns = @JoinColumn(name = "product_id"))
+	@CollectionTable(name = "reviews", joinColumns = @JoinColumn(name = "product_id"))
 	@Column(name = "reviews", nullable = false)
 	@Embedded
 	private List<Review> reviews;

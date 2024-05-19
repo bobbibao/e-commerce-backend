@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.vti.ecommerce.domains.WishList;
 
+
 public interface WishListRepository {
 	WishList findById(Long productID, String userID);
 	List<WishList> findByUserId(String userID);

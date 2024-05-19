@@ -10,7 +10,7 @@ import com.vti.ecommerce.repositories.OrderRepository;
 import com.vti.ecommerce.services.OrderService;
 import com.vti.ecommerce.services.dto.OrderDto;
 
-
+@Service
 public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
