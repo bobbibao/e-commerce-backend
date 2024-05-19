@@ -52,6 +52,12 @@ public class WishList implements Serializable {
 		this.price = getPrice();
 	}
 	
+	public WishList(Long productId, String userId, String selectedSize, int amount) {
+		this.amount = amount;
+		this.selectedSize = selectedSize;
+		this.price = getPrice();
+		this.product = new Product(productId);
+	}
 	public double getPrice() {
 		return amount * product.getPrices().get(-1).getValue();
 	}

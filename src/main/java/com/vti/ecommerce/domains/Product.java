@@ -104,4 +104,8 @@ public class Product implements Serializable {
 	@Embedded
 	private List<Review> reviews;
 
+
+	public Product(Long productId) {
+		this.productID = productId;
+	}
 }
