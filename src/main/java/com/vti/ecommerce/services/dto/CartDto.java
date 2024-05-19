@@ -18,7 +18,11 @@ public class CartDto {
     }
 
     public CartDto(Cart cart) {
-        //TODO Auto-generated constructor stub
+        this.productId = cart.getProduct().getProductID();
+        this.userId = cart.getUser().getUserID();
+        this.amount = cart.getAmount();
+        this.price = cart.getPrice();
+        this.selectedSize = cart.getSelectedSize();
     }
 
     public Long getProductId() {

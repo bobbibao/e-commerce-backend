@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.vti.ecommerce.domains.Cart;
 import com.vti.ecommerce.repositories.CartRepository;
 import com.vti.ecommerce.services.CartService;
-import com.vti.ecommerce.services.dto.CartDto;
 
 @Service
 public class CartServiceImpl implements CartService{
@@ -20,32 +19,27 @@ public class CartServiceImpl implements CartService{
 		this.cartRepository = cartRepository;
 	}
 	@Override
-	public CartDto getCart(Long productID, String userID) {
+	public Cart getCart(Long productID, String userID) {
 		Cart cart = cartRepository.findById(productID, userID);
 		if (cart == null) {
 			return null;
 		}
-		CartDto cartDto = convertToCartDto(cart);
-		return cartDto;
+		return cart;
 	}
 
 	@Override
-	public List<CartDto> getCartByUserId(String userID) {
+	public List<Cart> getCartByUserId(String userID) {
 		List<Cart> carts = cartRepository.findByUserId(userID);
 		if (carts == null) {
 			return null;
 		}
-		List<CartDto> cartDtos = null;
-		for (Cart cart : carts) {
-			cartDtos.add(convertToCartDto(cart));
-		}
-		return cartDtos;
+		return carts;
 	}
 
 	@Override
-	public boolean addToCart(CartDto cartDto) {
+	public boolean addToCart(Cart Cart) {
 		boolean result = true;
-		Cart cart = new Cart(cartDto.getAmount(), cartDto.getSelectedSize());
+		Cart cart = new Cart(Cart.getAmount(), Cart.getSelectedSize());
 
 		if (cartRepository.save(cart) == null) {
 			result = false;
@@ -64,7 +58,7 @@ public class CartServiceImpl implements CartService{
 		return result;
 	}
 
-	public CartDto convertToCartDto(Cart cart) {
-		return new CartDto(cart.getProduct().getProductID(), cart.getUser().getUserID(), cart.getAmount(), cart.getPrice(), cart.getSelectedSize());
-	}
+	// public Cart convertToCart(Cart cart) {
+	// 	return new Cart(cart.getAmount(), cart.getSelectedSize());
+	// }
 }

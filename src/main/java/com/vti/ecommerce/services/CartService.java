@@ -2,12 +2,12 @@ package com.vti.ecommerce.services;
 
 import java.util.List;
 
-import com.vti.ecommerce.services.dto.CartDto;
+import com.vti.ecommerce.domains.Cart;
 
 
 public interface CartService {
-	CartDto getCart(Long productID, String userID);
-	List<CartDto> getCartByUserId(String userID);
-	boolean addToCart(CartDto cartDto);
+	Cart getCart(Long productID, String userID);
+	List<Cart> getCartByUserId(String userID);
+	boolean addToCart(Cart Cart);
 	boolean removeFromCart(Long productID, String userID);
 }
