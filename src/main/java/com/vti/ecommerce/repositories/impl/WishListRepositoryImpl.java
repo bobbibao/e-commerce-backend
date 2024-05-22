@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.vti.ecommerce.domains.WishList;
+import com.vti.ecommerce.domains.entities.WishList;
 import com.vti.ecommerce.repositories.WishListRepository;
 
 import jakarta.persistence.EntityManager;

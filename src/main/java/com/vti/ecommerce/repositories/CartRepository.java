@@ -2,7 +2,7 @@ package com.vti.ecommerce.repositories;
 
 import java.util.List;
 
-import com.vti.ecommerce.domains.Cart;
+import com.vti.ecommerce.domains.entities.Cart;
 
 
 public interface CartRepository {

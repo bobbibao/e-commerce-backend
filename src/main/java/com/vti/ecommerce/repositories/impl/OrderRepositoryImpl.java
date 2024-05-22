@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.vti.ecommerce.domains.Order;
+import com.vti.ecommerce.domains.entities.Order;
 import com.vti.ecommerce.repositories.OrderRepository;
 
 import jakarta.persistence.EntityManager;

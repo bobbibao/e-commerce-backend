@@ -2,7 +2,7 @@ package com.vti.ecommerce.repositories;
 
 import java.util.List;
 
-import com.vti.ecommerce.domains.Order;
+import com.vti.ecommerce.domains.entities.Order;
 
 public interface OrderRepository {
 	Order findById(Long orderID);

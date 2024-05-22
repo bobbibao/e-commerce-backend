@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.vti.ecommerce.domains.Cart;
+import com.vti.ecommerce.domains.entities.Cart;
 import com.vti.ecommerce.repositories.CartRepository;
 
 import jakarta.persistence.EntityManager;

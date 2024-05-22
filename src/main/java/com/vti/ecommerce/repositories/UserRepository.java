@@ -1,6 +1,6 @@
 package com.vti.ecommerce.repositories;
 
-import com.vti.ecommerce.domains.User;
+import com.vti.ecommerce.domains.entities.User;
 
 public interface UserRepository {
 	User findById(String userID);

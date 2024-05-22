@@ -2,7 +2,7 @@ package com.vti.ecommerce.repositories.impl;
 
 import org.springframework.stereotype.Repository;
 
-import com.vti.ecommerce.domains.User;
+import com.vti.ecommerce.domains.entities.User;
 import com.vti.ecommerce.repositories.UserRepository;
 
 import jakarta.persistence.EntityManager;

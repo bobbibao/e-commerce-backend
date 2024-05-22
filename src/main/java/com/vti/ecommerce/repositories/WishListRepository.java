@@ -2,7 +2,7 @@ package com.vti.ecommerce.repositories;
 
 import java.util.List;
 
-import com.vti.ecommerce.domains.WishList;
+import com.vti.ecommerce.domains.entities.WishList;
 
 
 public interface WishListRepository {

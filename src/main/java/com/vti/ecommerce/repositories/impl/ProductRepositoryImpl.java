@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.vti.ecommerce.domains.Product;
+import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.repositories.ProductRepository;
+import com.vti.ecommerce.services.dto.ProductDto;
+import com.vti.ecommerce.utils.EnManagerFactory;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository{
@@ -20,7 +24,8 @@ public class ProductRepositoryImpl implements ProductRepository{
 
     @Override
     public Product findById(Long productID) {
-        return entityManager.find(Product.class, productID);
+		 Product p = entityManager.find(Product.class, productID);
+        return p;
 
         // return entityManager.find(Product.class, productID) != null ? Optional.of(entityManager.find(Product.class, productID)) : Optional.empty();
         // return entityManager.createQuery("SELECT p FROM Product p WHERE p.id = :id", Product.class)
@@ -29,6 +34,7 @@ public class ProductRepositoryImpl implements ProductRepository{
         //     .stream()
         //     .findFirst();
     }
+
 
     @Override
     public List<Product> findAll() {
@@ -65,5 +71,17 @@ public class ProductRepositoryImpl implements ProductRepository{
             throw e;
         }
     }
+
+    @Override
+    public ProductDto findById(String productID) {
+        TypedQuery<ProductDto> query = entityManager.createQuery(
+            "SELECT new com.vti.ecommerce.dto.ProductDTO(" +
+            "p.productID, p.productName, p.description, p.isInStock, " +
+            "p.rating, p.productDate, p.brandName, p.imageURL) " +
+            "FROM Product p WHERE p.productID = :id", ProductDto.class);
+        query.setParameter("id", productID);
+        return query.getSingleResult();
+    }
+    
 
 }
