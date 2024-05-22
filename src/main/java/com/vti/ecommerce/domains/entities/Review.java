@@ -1,4 +1,4 @@
-package com.vti.ecommerce.domains;
+package com.vti.ecommerce.domains.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
+@Embeddable
+@Table(name = "review")
 @NoArgsConstructor
 @Getter @Setter @ToString
 public class Review implements Serializable {

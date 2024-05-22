@@ -1,4 +1,4 @@
-package com.vti.ecommerce.domains;
+package com.vti.ecommerce.domains.entities;
 
 import java.io.Serializable;
 import java.util.List;

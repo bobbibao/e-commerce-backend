@@ -1,4 +1,5 @@
-package com.vti.ecommerce.domains;
+package com.vti.ecommerce.domains.entities;
+
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,10 +19,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "order_detail")
+@Table(name = "wish_list")
 @NoArgsConstructor
-@Getter @Setter @ToString 
-public class OrderDetail implements Serializable {
+@Getter @Setter @ToString
+public class WishList implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,24 +42,29 @@ public class OrderDetail implements Serializable {
 
 	@Id
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id")
-	private Order order;
-	
-	
-	public double getPrice() {
-		return amount * product.getPrices().get(-1).getValue();
-	}
+	@JoinColumn(name = "user_id")
+	private User user;
 
-	public OrderDetail(int amount, String selectedSize) {
+	public WishList(int amount, String selectedSize) {
 		super();
 		this.amount = amount;
 		this.selectedSize = selectedSize;
 		this.price = getPrice();
 	}
+	
+	public WishList(Long productId, String userId, String selectedSize, int amount) {
+		this.amount = amount;
+		this.selectedSize = selectedSize;
+		this.price = getPrice();
+		this.product = new Product(productId);
+	}
+	public double getPrice() {
+		return amount * product.getPrices().get(-1).getValue();
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(order, product);
+		return Objects.hash(product, user);
 	}
 
 	@Override
@@ -69,8 +75,9 @@ public class OrderDetail implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OrderDetail other = (OrderDetail) obj;
-		return Objects.equals(order, other.order) && Objects.equals(product, other.product);
+		WishList other = (WishList) obj;
+		return Objects.equals(product, other.product) && Objects.equals(user, other.user);
 	}
+	
 	
 }
