@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vti.ecommerce.domains.Product;
-import com.vti.ecommerce.domains.User;
-import com.vti.ecommerce.domains.WishList;
+import com.vti.ecommerce.domains.entities.Product;
+import com.vti.ecommerce.domains.entities.User;
+import com.vti.ecommerce.domains.entities.WishList;
 import com.vti.ecommerce.services.ProductService;
 import com.vti.ecommerce.services.UserService;
 import com.vti.ecommerce.services.WishListService;

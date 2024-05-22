@@ -5,10 +5,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vti.ecommerce.domains.Product;
+import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.services.ProductService;
 import com.vti.ecommerce.services.dto.ProductDto;
 
@@ -22,14 +24,12 @@ public class ProductResource {
 		this.productService = productService;
 	}
 
-	@GetMapping
-	public ResponseEntity<ProductDto> getProduct(Long id) {
+	@GetMapping("/{id}")
+	public ResponseEntity<Product> getProduct(@PathVariable Long id){
+		System.out.println("idasd: " + id);
 		Product product = productService.getProduct(id);
-		if (product == null) {
-			return ResponseEntity.notFound().build();
-		}
-		ProductDto productDto = new ProductDto(product);
-		return ResponseEntity.ok(productDto);
+		System.out.println("product: " + product);
+		return ResponseEntity.ok(product);
 	}
 	
 }
