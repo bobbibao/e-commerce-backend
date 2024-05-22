@@ -2,7 +2,7 @@ package com.vti.ecommerce.services;
 
 import java.util.Optional;
 
-import com.vti.ecommerce.domains.Product;
+import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.services.dto.ProductDto;
 
 public interface ProductService {

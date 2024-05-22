@@ -1,8 +1,11 @@
 package com.vti.ecommerce.services;
 
-import com.vti.ecommerce.domains.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
-public interface UserService {
+import com.vti.ecommerce.domains.entities.User;
+
+public interface UserService extends UserDetailsService{
     User getUser(String id);
     User createUser(User User);
     User updateUser(Long id, User User);

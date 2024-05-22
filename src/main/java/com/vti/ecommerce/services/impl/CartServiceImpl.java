@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vti.ecommerce.domains.Cart;
+import com.vti.ecommerce.domains.entities.Cart;
 import com.vti.ecommerce.repositories.CartRepository;
 import com.vti.ecommerce.services.CartService;
 
@@ -37,9 +37,8 @@ public class CartServiceImpl implements CartService{
 	}
 
 	@Override
-	public boolean addToCart(Cart Cart) {
+	public boolean addToCart(Cart cart) {
 		boolean result = true;
-		Cart cart = new Cart(Cart.getAmount(), Cart.getSelectedSize());
 
 		if (cartRepository.save(cart) == null) {
 			result = false;

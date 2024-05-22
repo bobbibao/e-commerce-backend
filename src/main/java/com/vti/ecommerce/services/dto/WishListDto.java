@@ -1,6 +1,6 @@
 package com.vti.ecommerce.services.dto;
 
-import com.vti.ecommerce.domains.WishList;
+import com.vti.ecommerce.domains.entities.WishList;
 
 public class WishListDto {
 	private Long productId;

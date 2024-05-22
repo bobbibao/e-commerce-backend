@@ -1,6 +1,6 @@
 package com.vti.ecommerce.services.dto;
 
-import com.vti.ecommerce.domains.Cart;
+import com.vti.ecommerce.domains.entities.Cart;
 
 public class CartDto {
     private Long productId;
@@ -9,11 +9,10 @@ public class CartDto {
     private double price;
     private String selectedSize;
 
-    public CartDto(Long productId, String userId, int amount, double price, String selectedSize) {
+    public CartDto(Long productId, String userId, int amount, String selectedSize) {
         this.productId = productId;
         this.userId = userId;
         this.amount = amount;
-        this.price = price;
         this.selectedSize = selectedSize;
     }
 
@@ -24,6 +23,7 @@ public class CartDto {
         this.price = cart.getPrice();
         this.selectedSize = cart.getSelectedSize();
     }
+
 
     public Long getProductId() {
         return productId;

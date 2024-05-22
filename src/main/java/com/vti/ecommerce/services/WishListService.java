@@ -2,7 +2,7 @@ package com.vti.ecommerce.services;
 
 import java.util.List;
 
-import com.vti.ecommerce.domains.WishList;
+import com.vti.ecommerce.domains.entities.WishList;
 
 public interface WishListService {
     WishList getWishList(Long productID, String userID);

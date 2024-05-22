@@ -3,7 +3,7 @@ package com.vti.ecommerce.services.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vti.ecommerce.domains.Product;
+import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.repositories.ProductRepository;
 import com.vti.ecommerce.services.ProductService;
 import com.vti.ecommerce.services.dto.ProductDto;

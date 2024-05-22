@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vti.ecommerce.domains.Order;
+import com.vti.ecommerce.domains.entities.Order;
 import com.vti.ecommerce.repositories.OrderRepository;
 import com.vti.ecommerce.services.OrderService;
 import com.vti.ecommerce.services.dto.OrderDto;
