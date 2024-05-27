@@ -7,53 +7,49 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 @Entity
-@Table(name = "order_detail")
-@NoArgsConstructor
-@Getter @Setter @ToString 
+@Table(name = "order_details")
+@Data
 public class OrderDetail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@Column(name = "order_detail_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long orderDetailID;
+	
 	@Column(name = "amount")
 	private int amount;
-
-	@Column(name = "price")
-	private double price;
 
 	@Column(name = "selected_size")
 	private String selectedSize;
 
-	@Id
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
 	private Product product;
 
-	@Id
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_id")
 	private Order order;
 	
-	
 	public double getPrice() {
-		return amount * product.getPrices().get(-1).getValue();
+		return amount * product.getPrices().get(-1).getPriceValue();
 	}
 
 	public OrderDetail(int amount, String selectedSize) {
 		super();
 		this.amount = amount;
 		this.selectedSize = selectedSize;
-		this.price = getPrice();
 	}
 
 	@Override
