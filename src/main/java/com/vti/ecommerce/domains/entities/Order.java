@@ -1,9 +1,13 @@
 package com.vti.ecommerce.domains.entities;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+
+import com.vti.ecommerce.domains.enumeration.OrderStatus;
+import com.vti.ecommerce.services.dto.OrderDetailDto;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -14,6 +18,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -26,6 +32,12 @@ import lombok.ToString;
 @Table(name = "`orders`")
 @NoArgsConstructor
 @Getter @Setter @ToString
+@NamedQueries({
+	@NamedQuery(name = "Order.getOrderByUserId", query = "SELECT o FROM Order o WHERE o.user.userID = :userID"),
+	@NamedQuery(name = "Order.getOrderByOrderID", query = "SELECT o FROM Order o WHERE o.orderID = :orderID"),
+	@NamedQuery(name = "Order.addOrder", query = "INSERT INTO Order o VALUES (:orderID, :orderTotal, :VAT, :shippingCost, :orderDate, :shippingAddress, :orderStatusHistory, :vourcher, :orderDetails, :user)"),
+	@NamedQuery(name = "Order.getOrderByOrderStatus", query = "SELECT o FROM Order o WHERE o.orderStatusHistory.orderStatus = :orderStatus"),
+})
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;

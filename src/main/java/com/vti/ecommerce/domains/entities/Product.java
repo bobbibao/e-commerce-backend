@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vti.ecommerce.domains.enumeration.ProductCategory;
 import com.vti.ecommerce.domains.enumeration.ProductGender;
 
@@ -69,6 +70,9 @@ public class Product implements Serializable {
     @Column(name = "status")
     private String status;
 
+    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    private boolean isDeleted;
+    
 //    @Column(name = "import_price")
 //    private Double price;
 
@@ -80,7 +84,7 @@ public class Product implements Serializable {
     @Column(name = "category")
     private ProductCategory category;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "available_sizes", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "size")
     private Set<String> availableSize;
@@ -93,6 +97,7 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductPrice> prices;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CustomerReview> customerReviews;
 
@@ -106,5 +111,12 @@ public class Product implements Serializable {
     public Product(Long productId) {
         this.productID = productId;
     }
-    
+
+	@Override
+	public String toString() {
+		return "Product [productID=" + productID + ", productCode=" + productCode + ", productName=" + productName
+				+ ", description=" + description + ", isInStock=" + isInStock + ", rating=" + rating + ", createAt="
+				+ createAt + ", updateAt=" + updateAt + ", brandName=" + brandName + ", imageURL=" + imageURL
+				+ ", status=" + status + ", gender=" + gender + ", category=" + category + "]";
+	}
 }

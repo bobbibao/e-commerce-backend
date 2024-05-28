@@ -1,9 +1,9 @@
 package com.vti.ecommerce.domains.enumeration;
 
 public enum OrderStatus {
-	NEW,
-	IN_RPOGRESS,
-	COMPLETED,
-	ON_HOLD,
+	PENDING,
+	PROCESSING,
+	SHIPPED,
+	DELIVERED,
 	CANCELLED
 }
