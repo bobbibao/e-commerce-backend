@@ -6,6 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vti.ecommerce.domains.enumeration.OrderStatus;
 import com.vti.ecommerce.services.dto.OrderDetailDto;
 
@@ -35,9 +39,11 @@ import lombok.ToString;
 @NamedQueries({
 	@NamedQuery(name = "Order.getOrderByUserId", query = "SELECT o FROM Order o WHERE o.user.userID = :userID"),
 	@NamedQuery(name = "Order.getOrderByOrderID", query = "SELECT o FROM Order o WHERE o.orderID = :orderID"),
-	@NamedQuery(name = "Order.addOrder", query = "INSERT INTO Order o VALUES (:orderID, :orderTotal, :VAT, :shippingCost, :orderDate, :shippingAddress, :orderStatusHistory, :vourcher, :orderDetails, :user)"),
-	@NamedQuery(name = "Order.getOrderByOrderStatus", query = "SELECT o FROM Order o WHERE o.orderStatusHistory.orderStatus = :orderStatus"),
+	@NamedQuery(name = "Order.getOrderByOrderDate", query = "SELECT o FROM Order o WHERE o.orderDate = :orderDate"),
+	@NamedQuery(name = "Order.addOrder", query = "INSERT INTO Order o (o.orderTotal, o.VAT, o.shippingCost, o.orderDate, o.shippingAddress, o.user) VALUES (:orderTotal, :VAT, :shippingCost, :orderDate, :shippingAddress, :user)"),
+	@NamedQuery(name = "Order.getOrderByOrderStatus", query = "SELECT o FROM Order o INNER JOIN OrderStatusHistory osh ON o.orderID = osh.order.orderID WHERE osh.orderStatus = :orderStatus"),
 })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Order implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -62,16 +68,20 @@ public class Order implements Serializable {
 	@Column(name = "shipping_address")
 	private String shippingAddress;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<OrderStatusHistory> orderStatusHistory;
 	
+	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "vourcher_code", unique = true)
 	private Voucher vourcher;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<OrderDetail> orderDetails;
 	
+	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
@@ -88,4 +98,15 @@ public class Order implements Serializable {
 				.mapToDouble(orderDetail -> orderDetail.getPrice())
 				.sum();
 	}
+
+	@Override
+	public String toString() {
+		return "Order [orderID=" + orderID + ", orderTotal=" + orderTotal + ", VAT=" + VAT + ", shippingCost="
+				+ shippingCost + ", orderDate=" + orderDate + ", shippingAddress=" + shippingAddress
+				+ ", orderStatusHistory=" + orderStatusHistory + ", vourcher=" + vourcher + ", orderDetails="
+				+ orderDetails + "]";
+	}
+
+	
+
 }

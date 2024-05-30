@@ -3,6 +3,8 @@ package com.vti.ecommerce.domains.entities;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -43,9 +45,11 @@ public class Supplier implements Serializable{
 	@Embedded
 	private Address address;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Product> products;
 	
+	@JsonManagedReference
 	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<RestockHistory> restockHistorys;
 }

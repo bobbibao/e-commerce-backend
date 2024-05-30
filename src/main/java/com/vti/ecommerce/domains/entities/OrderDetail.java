@@ -3,6 +3,9 @@ package com.vti.ecommerce.domains.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,11 +18,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "order_details")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 public class OrderDetail implements Serializable {
 
@@ -36,10 +41,12 @@ public class OrderDetail implements Serializable {
 	@Column(name = "selected_size")
 	private String selectedSize;
 
+	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	@JsonBackReference
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "order_id")
 	private Order order;
@@ -70,5 +77,12 @@ public class OrderDetail implements Serializable {
 		OrderDetail other = (OrderDetail) obj;
 		return Objects.equals(order, other.order) && Objects.equals(product, other.product);
 	}
+
+	@Override
+	public String toString() {
+		return "OrderDetail [orderDetailID=" + orderDetailID + ", amount=" + amount + ", selectedSize=" + selectedSize
+				+ "]";
+	}
+	
 	
 }

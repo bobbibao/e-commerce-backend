@@ -3,6 +3,9 @@ package com.vti.ecommerce.domains.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +38,7 @@ public class AdminActivity implements Serializable{
 	@Column(name = "activity_date")
 	private LocalDateTime activityDate;
 	
+	@JsonManagedReference
 	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "admin_id")
 	private User user;

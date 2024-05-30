@@ -3,6 +3,9 @@ package com.vti.ecommerce.domains.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,10 +35,12 @@ public class RestockHistory implements Serializable{
 	@Column(name = "restock_date")
 	private LocalDateTime restockDate;
 	
+	@JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
 	private Product product;
 
+	@JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
 	private Supplier supplier;

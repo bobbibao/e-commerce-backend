@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vti.ecommerce.domains.enumeration.ProductCategory;
 import com.vti.ecommerce.domains.enumeration.ProductGender;
 
@@ -84,26 +86,31 @@ public class Product implements Serializable {
     @Column(name = "category")
     private ProductCategory category;
 
+    @JsonManagedReference
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "available_sizes", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "size")
     private Set<String> availableSize;
-    
+
+    @JsonManagedReference
     @ElementCollection
     @CollectionTable(name = "additional_image_urls", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "url")
     private List<String> additionalImageURLs;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductPrice> prices;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CustomerReview> customerReviews;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RestockHistory> restockHistory;
     
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
