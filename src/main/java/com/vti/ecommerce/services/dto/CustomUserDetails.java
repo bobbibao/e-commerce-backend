@@ -15,7 +15,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CustomUserDetails implements UserDetails{
-    User user;
+    private static final long serialVersionUID = -6410751586039247851L;
+	User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -25,12 +26,12 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return user.getPasswordHash();
     }
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return user.getEmail();
     }
 
     @Override

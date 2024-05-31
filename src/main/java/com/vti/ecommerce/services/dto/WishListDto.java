@@ -4,7 +4,7 @@ import com.vti.ecommerce.domains.entities.WishList;
 
 public class WishListDto {
 	private Long productId;
-    private String userId;
+	private String userID;
     private int amount;
     private double price;
     private String selectedSize;
@@ -14,7 +14,6 @@ public class WishListDto {
 
     public WishListDto(Long productId, String userId, int amount, double price, String selectedSize) {
         this.productId = productId;
-        this.userId = userId;
         this.amount = amount;
         this.price = price;
         this.selectedSize = selectedSize;
@@ -22,7 +21,6 @@ public class WishListDto {
 
     public WishListDto(WishList wishList) {
         this.productId = wishList.getProduct().getProductID();
-        this.userId = wishList.getUser().getUserID();
         this.amount = wishList.getAmount();
         this.price = wishList.getPrice();
         this.selectedSize = wishList.getSelectedSize();
@@ -36,10 +34,6 @@ public class WishListDto {
         this.productId = productId;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
     public int getAmount() {
         return amount;
     }
@@ -51,6 +45,14 @@ public class WishListDto {
     public String getSelectedSize() {
         return selectedSize;
     }
+
+	public String getUserId() {
+		return userID;
+	}
+
+	public void setUserId(String userID) {
+		this.userID = userID;
+	}
     
 
 }
