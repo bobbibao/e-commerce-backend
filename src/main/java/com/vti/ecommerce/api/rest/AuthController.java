@@ -28,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        System.out.println("Authentication: " + passwordEncoder.encode("1233214321"));
+        System.out.println("Authentication: " + passwordEncoder.encode("password1"));
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -58,20 +58,26 @@ public class AuthController {
 }
 
 class LoginRequest {
-    private String username;
+    private String email;
     private String password;
-    
-    public String getUsername() {
-        return username;
+
+    public LoginRequest() {
     }
 
-    public void setUsername(String username) {
-        System.out.println("Username: " + username);
-        this.username = username;
+    public LoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
-        System.out.println("Password: " + password);
         return password;
     }
 
