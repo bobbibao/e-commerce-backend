@@ -74,8 +74,8 @@ public class Order implements Serializable {
 	
 	@JsonManagedReference
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "vourcher_code", unique = true)
-	private Voucher vourcher;
+	@JoinColumn(name = "coupon_code", unique = true)
+	private Coupon coupon;
 	
 	@JsonManagedReference
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -102,9 +102,7 @@ public class Order implements Serializable {
 	@Override
 	public String toString() {
 		return "Order [orderID=" + orderID + ", orderTotal=" + orderTotal + ", VAT=" + VAT + ", shippingCost="
-				+ shippingCost + ", orderDate=" + orderDate + ", shippingAddress=" + shippingAddress
-				+ ", orderStatusHistory=" + orderStatusHistory + ", vourcher=" + vourcher + ", orderDetails="
-				+ orderDetails + "]";
+				+ shippingCost + ", orderDate=" + orderDate ;
 	}
 
 	

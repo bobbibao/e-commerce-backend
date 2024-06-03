@@ -42,7 +42,7 @@ public class CustomerReview implements Serializable {
 	@Column(name = "review_title")
 	private String reviewTitle;
 	
-	@Column(name = "review_text")
+	@Column(name = "review_text", length = 1000)
 	private String reviewText;
 
 	@Column(name = "rating")
