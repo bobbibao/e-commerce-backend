@@ -2,13 +2,16 @@ package com.vti.ecommerce.repositories;
 
 import java.util.List;
 
-import com.vti.ecommerce.domains.entities.Cart;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import com.vti.ecommerce.domains.entities.RestockHistory;
 
-public interface CartRepository {
-	Cart findById(Long productID, String userID);
-	List<Cart> findByUserId(String userID);
-	Cart save(Cart cart);
-	Cart deleteById(Long productID, String userID);
+@Repository
+public interface IRestockHistoryRepository extends JpaRepository<RestockHistory, Long>{
+//	RestockHistory findById(Long restockHistoryID);
+//	List<RestockHistory> findByProductId(Long productID);
+//	RestockHistory save(RestockHistory restockHistory);
+//	RestockHistory deleteById(Long restockHistoryID);
 	
 }
