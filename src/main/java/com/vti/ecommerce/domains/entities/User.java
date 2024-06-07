@@ -32,9 +32,8 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private long userID;
+	private String userID;
 
 	@Column(name = "first_name")
 	private String firstName;

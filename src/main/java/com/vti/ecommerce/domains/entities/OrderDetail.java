@@ -52,7 +52,11 @@ public class OrderDetail implements Serializable {
 	private Order order;
 	
 	public double getPrice() {
+		try {
 		return amount * product.getPrices().get(-1).getPriceValue();
+		}catch (Exception e) {
+			return 0;
+		}
 	}
 
 	public OrderDetail(int amount, String selectedSize) {

@@ -4,8 +4,11 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Data;
+import lombok.ToString;
 
 @Embeddable
+@Data
 public class Address implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
@@ -24,4 +27,9 @@ public class Address implements Serializable{
 	
 	@Column(name = "zip_code")
 	private int zipCode;
+
+	@Override
+	public String toString() {
+		return "Address [address=" + address + ", state=" + state + ", city=" + city + ", zipCode=" + zipCode + "]";
+	}
 }
