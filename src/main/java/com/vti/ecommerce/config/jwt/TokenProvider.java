@@ -13,13 +13,12 @@ public class TokenProvider {
     private final String jwtSecret = "secretKey";
     private final long jwtExpiration = 604800000L; // 1 tuần
 
-    public String generateToken(String username) {
-    	System.out.println(username);
+    public String generateToken(String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.vti.ecommerce.config.jwt.AuthenticationFilter;
 import com.vti.ecommerce.config.jwt.TokenProvider;
-import com.vti.ecommerce.services.UserService;
+import com.vti.ecommerce.services.IUserService;
 
 import java.util.Arrays;
 
@@ -40,6 +40,7 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    @SuppressWarnings({ "removal", "deprecation" })
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -48,7 +49,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .requestMatchers("/login").permitAll()
-                .requestMatchers("/register").permitAll() //permit all là gì: login và register không cần xác thực cho phép truy cập
+                .requestMatchers("/register").permitAll()
                 .requestMatchers("/order/**").authenticated()
                 .requestMatchers("/user/current").authenticated()
                 .and()

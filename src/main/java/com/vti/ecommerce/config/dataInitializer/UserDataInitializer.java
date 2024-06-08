@@ -6,13 +6,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.vti.ecommerce.domains.entities.User;
-import com.vti.ecommerce.repositories.UserRepository;
+import com.vti.ecommerce.repositories.IUserRepository;
 
 @Component
 public class UserDataInitializer implements CommandLineRunner {
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
