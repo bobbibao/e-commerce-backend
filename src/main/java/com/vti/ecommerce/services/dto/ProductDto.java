@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.vti.ecommerce.domains.entities.Product;
-import com.vti.ecommerce.domains.enumeration.ProductCategory;
 import com.vti.ecommerce.domains.enumeration.ProductGender;
 
 import lombok.Getter;
@@ -14,26 +13,68 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class ProductDto {
-	private long productID;
-    private String productName;
+	private long id;
+    private String productCode;
+    private String name;
     private String description;
     private boolean isInStock;
     private int rating;
+    private String gender;
+    private String category;
     private String brandName;
-    private String imageURL;
+    private String imageUrl;
+    private LocalDate productionDate;
+    private Set<String> availableSizes;
+    private int totalReviewCount;
     private double price;
-    // Constructors, Getters, and Setters
+    private List<String> additionalImageUrls;
+    private List<ReviewDto> reviews;
 
     public ProductDto() {
     }
-    public ProductDto(long productID, String productName, String description, boolean isInStock, int rating, String brandName, String imageURL, double price) {
-        this.productID = productID;
-        this.productName = productName;
+
+    public ProductDto(long id, String productCode, String name, String description, boolean isInStock, int rating,
+            String gender, String category, String brandName, String imageUrl, LocalDate productionDate,
+            Set<String> availableSizes, int totalReviewCount, double price, List<String> additionalImageUrls,
+            List<ReviewDto> reviews) {
+        this.id = id;
+        this.productCode = productCode;
+        this.name = name;
         this.description = description;
         this.isInStock = isInStock;
         this.rating = rating;
+        this.gender = gender;
+        this.category = category;
         this.brandName = brandName;
-        this.imageURL = imageURL;
+        this.imageUrl = imageUrl;
+        this.productionDate = productionDate;
+        this.availableSizes = availableSizes;
+        this.totalReviewCount = totalReviewCount;
         this.price = price;
+        this.additionalImageUrls = additionalImageUrls;
+        this.reviews = reviews;
     }
+
+    public Product toEntity() {
+        Product product = new Product();
+        product.setProductID(id);
+        product.setProductCode(productCode);
+        product.setProductName(name);
+        product.setDescription(description);
+        product.setInStock(isInStock);
+        product.setRating(rating);
+        
+        product.setGender(ProductGender.valueOf(name));
+        // product.setCategory(category);
+        product.setBrandName(brandName);
+        product.setImageURL(imageUrl);
+        product.setCreateAt(productionDate);
+        // product.setAvailableSizes(availableSizes);
+        // product.setTotalReviewCount(totalReviewCount);
+        // product.setPrice(price);
+        // product.setAdditionalImageUrls(additionalImageUrls);
+        // product.setReviews(reviews);
+        return product;
+    }
+    
 }

@@ -1,58 +1,71 @@
 package com.vti.ecommerce.services.dto;
 
+import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.domains.entities.WishList;
 
+import lombok.Data;
+
+// {
+//     "id": 204453531,
+//     "title": "AAPE By A Bathing Ape baseball t-shirt in black",
+//     "image": "images.asos-media.com/products/aape-by-a-bathing-ape-baseball-t-shirt-in-black/204453531-1-black",
+//     "rating": 4,
+//     "price": 69,
+//     "brandName": "AAPE BY A BATHING APE®",
+//     "amount": 1,
+//     "selectedSize": "XS",
+//     "isInWishList": false
+//   },
+@Data
 public class WishListDto {
-	private Long productId;
-	private String userID;
-    private int amount;
+    private long id;
+    private String title;
+    private String image;
+    private int rating;
     private double price;
+    private String brandName;
+    private int amount;
     private String selectedSize;
+    private boolean isInWishList;
 
     public WishListDto() {
     }
 
-    public WishListDto(Long productId, String userId, int amount, double price, String selectedSize) {
-        this.productId = productId;
-        this.amount = amount;
+    public WishListDto(long id, String title, String image, int rating, double price, String brandName, int amount,
+            String selectedSize, boolean isInWishList) {
+        this.id = id;
+        this.title = title;
+        this.image = image;
+        this.rating = rating;
         this.price = price;
+        this.brandName = brandName;
+        this.amount = amount;
         this.selectedSize = selectedSize;
+        this.isInWishList = isInWishList;
     }
 
     public WishListDto(WishList wishList) {
-        this.productId = wishList.getProduct().getProductID();
+        this.id = wishList.getWishListID();
+        this.title = wishList.getProduct().getProductName();
+        this.image = wishList.getProduct().getImageURL();
+        this.rating = wishList.getProduct().getRating();
+        this.price = 1000;
+        this.brandName = wishList.getProduct().getBrandName();
         this.amount = wishList.getAmount();
-        this.price = wishList.getPrice();
         this.selectedSize = wishList.getSelectedSize();
+        this.isInWishList = true;
+
     }
 
-    public Long getProductId() {
-        return productId;
+    public WishList convertToEntity() {
+        WishList wishList = new WishList();
+        Product product = new Product(this.id);
+        product.setProductName(this.title);
+        wishList.setWishListID(this.id);
+        wishList.setAmount(this.amount);
+        wishList.setSelectedSize(this.selectedSize);
+        wishList.setProduct(product);
+        
+        return wishList;
     }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String getSelectedSize() {
-        return selectedSize;
-    }
-
-	public String getUserId() {
-		return userID;
-	}
-
-	public void setUserId(String userID) {
-		this.userID = userID;
-	}
-    
-
 }
