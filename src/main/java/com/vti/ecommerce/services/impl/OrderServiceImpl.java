@@ -1,18 +1,21 @@
 package com.vti.ecommerce.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 import com.vti.ecommerce.domains.entities.Order;
 import com.vti.ecommerce.domains.entities.OrderDetail;
+import com.vti.ecommerce.domains.entities.OrderStatusHistory;
 import com.vti.ecommerce.domains.entities.User;
 import com.vti.ecommerce.domains.enumeration.OrderStatus;
 import com.vti.ecommerce.repositories.IOrderRepository;
+import com.vti.ecommerce.repositories.IOrderStatusHistoryRepository;
 import com.vti.ecommerce.repositories.IProductRepository;
 import com.vti.ecommerce.repositories.IUserRepository;
 import com.vti.ecommerce.services.IOrderService;
@@ -30,10 +33,14 @@ public class OrderServiceImpl implements IOrderService{
     @Autowired
     private IProductRepository productRepository;
 
-    public OrderServiceImpl(IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository) {
+    @Autowired
+    private IOrderStatusHistoryRepository orderStatusHistoryRepository;
+
+    public OrderServiceImpl(IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IOrderStatusHistoryRepository orderStatusHistoryRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
     }
 //    @Override
 //    public OrderDto getOrder(Long orderID) {
@@ -89,19 +96,34 @@ public class OrderServiceImpl implements IOrderService{
 //    }
    public Order convertToOrder(OrderDto orderDto) {
          Order order = new Order();
-        order.setUser(userRepository.findById(orderDto.getUserId()).get());
-        order.setOrderTotal(orderDto.getTotal());
-        order.setOrderDetails(
-                orderDto.getOrderDetailDtos().stream().map(
-                        orderDetailDto -> {
-                            OrderDetail orderDetail = new OrderDetail();
-                            orderDetail.setOrder(order);
-                            orderDetail.setProduct(productRepository.findById(orderDetailDto.getProductId()).get());
-                            orderDetail.setAmount(orderDetailDto.getQuantity());
-                            return orderDetail;
-                        }
+         User user = userRepository.findById(orderDto.getUserId()).get();
+            order.setOrderID(orderDto.getId());
+            order.setUser(user);
+            order.setOrderTotal(orderDto.getSubtotal());
+            order.setOrderDate(LocalDateTime.now());
+
+            // Set<OrderStatusHistory> orderStatusHistories = order.getOrderStatusHistory();
+            Set<OrderStatusHistory> orderStatusHistories = orderStatusHistoryRepository.findByOrderId(orderDto.getId());
+            OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
+            orderStatusHistory.setOrderStatus(OrderStatus.PROCESSING);
+            orderStatusHistory.setOrder(order);
+            orderStatusHistory.setChangeAt(LocalDateTime.now());
+            orderStatusHistory.setChangeBy(user);
+            orderStatusHistories.add(orderStatusHistory);
+            order.setOrderStatusHistory(orderStatusHistories);
+
+            order.setOrderDetails(
+                orderDto.getCartItems().stream().map(
+                    orderDetailDto -> {
+                        OrderDetail orderDetail = new OrderDetail();
+                        orderDetail.setProduct(productRepository.findById(orderDetailDto.getId()).get());
+                        orderDetail.setAmount(orderDetailDto.getAmount());
+                        orderDetail.setSelectedSize(orderDetailDto.getSelectedSize());
+                        orderDetail.setOrder(order);
+                        return orderDetail;
+                    }
                 ).collect(Collectors.toList())
-        );
+            );
             
         return order;
    }
@@ -120,8 +142,7 @@ public class OrderServiceImpl implements IOrderService{
 
     @Override
     public List<OrderDto> getOrders() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getOrders'");
+        return orderRepository.findAll().stream().map(OrderDto::new).collect(Collectors.toList());
     }
 
     @Override
@@ -143,8 +164,8 @@ public class OrderServiceImpl implements IOrderService{
     }
 
     @Override
-    public List<Order> getOrderByUserId(String userID) {
-        return this.orderRepository.getOrderByUserId(userID);
+    public List<OrderDto> getOrderByUserId(String userID) {
+        return orderRepository.findByUser(userRepository.findById(userID).get()).stream().map(OrderDto::new).collect(Collectors.toList());
     }
 
     @Override
@@ -161,8 +182,20 @@ public class OrderServiceImpl implements IOrderService{
 
     @Override
     public boolean updateOrderStatus(Long orderID, String status) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateOrderStatus'");
+        try{
+            Order order = orderRepository.findById(orderID).get();
+            OrderStatus orderStatus = OrderStatus.valueOf(status);
+            OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
+            orderStatusHistory.setOrderStatus(orderStatus);
+            orderStatusHistory.setOrder(order);
+            orderStatusHistory.setChangeAt(LocalDateTime.now());
+            orderStatusHistory.setChangeBy(order.getUser());
+            orderStatusHistoryRepository.save(orderStatusHistory);
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
     @Override
     public boolean createOrder(String email, Map<String, Object> newOrder) {
@@ -189,5 +222,15 @@ public class OrderServiceImpl implements IOrderService{
             e.printStackTrace();
             return false;
         }
+    }
+
+    private OrderDto convertToDto(Order order){
+        OrderDto orderDto = new OrderDto(order);
+        return orderDto;
+    }
+
+    @Override
+    public OrderDto getOrderById(long orderID) {
+        return new OrderDto(orderRepository.findById(orderID).get());
     }
 }
