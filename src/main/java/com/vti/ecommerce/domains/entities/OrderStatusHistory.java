@@ -39,7 +39,7 @@ public class OrderStatusHistory {
 	private LocalDateTime changeAt;
 	
 	@OneToOne
-	@JoinColumn(name = "change_by")
+	@JoinColumn(name = "change_by", referencedColumnName = "user_id", unique = false)
 	private User changeBy;
 	
 	@JsonBackReference
@@ -53,6 +53,11 @@ public class OrderStatusHistory {
 		this.changeAt = changeAt;
 		this.changeBy = changeBy;
 		this.order = order;
+	}
+
+	public OrderStatusHistory(OrderStatus orderStatus, LocalDateTime changeAt) {
+		this.orderStatus = orderStatus;
+		this.changeAt = changeAt;
 	}
 
 	@Override
