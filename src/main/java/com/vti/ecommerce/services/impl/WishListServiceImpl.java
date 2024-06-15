@@ -21,20 +21,29 @@ public class WishListServiceImpl implements IWishListService{
 //		return wishListRepository.findById(productID, userID);
 //	}
 //
-//	@Override
-//	public List<WishList> getWishListByUserId(String userID) {
-//		return wishListRepository.findByUserId(userID);
-//	}
+	@Override
+	public List<WishList> getWishListByUserId(String userID) {
+		return wishListRepository.findByUser(userID);
+	}
 //
-//	@Override
-//	public boolean addToWishList(WishList wishList) {
-//		return wishListRepository.save(wishList);
-//	}
-//
-//	@Override
-//	public boolean removeFromWishList(Long productID, String userID) {
-//		return wishListRepository.deleteById(productID, userID);
-//	}
+	@Override
+	public boolean addToWishList(WishList wishList) {
+		boolean wishListExist = wishListRepository.findByUserAndProduct(wishList.getUser().getUserID(), wishList.getProduct().getProductID());
+		if (wishListExist) {
+			return false;
+		}
+		wishListRepository.save(wishList);
+		return true;
+	}
 
+    // @Override
+    // public boolean removeFromWishList(String userID, Long productID) {
+	// 	return wishListRepository.deleteByUserAndProduct(userID, productID) > 0;
+    // }
 
+	@Override
+	public boolean removeFromWishList(long id) {
+		wishListRepository.deleteById(id);
+		return true;
+	}
 }
