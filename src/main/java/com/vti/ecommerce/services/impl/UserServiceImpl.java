@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vti.ecommerce.domains.entities.Role;
@@ -31,28 +32,6 @@ public class UserServiceImpl implements IUserService{
 		this.userRepository = userRepository;
 		this.orderRepository = orderRepository;
 	}
-//	@Override
-//	public User getUser(String id) {
-//		return userRepository.findById(id);
-//	}
-//
-//	@Override
-//	public User createUser(User User) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public User updateUser(Long id, User User) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public boolean deleteUser(Long id) {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByEmail(username);
@@ -71,22 +50,6 @@ public class UserServiceImpl implements IUserService{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	// @SuppressWarnings("unchecked")
-	// @Override
-	// public List<OrderDto> getOrdersByEmail(String email) {
-	// 	User user = userRepository.findByEmail(email);
-	// 	if (user == null) {
-	// 		return new ArrayList<>();
-	// 	}
-	// 	List<Order> orders = orderRepository.findByUser(user);
-	// 	List<OrderDto> orderDtos = orders.stream().map(order -> convertOrderDto(order)).collect(Collectors.toList());
-	// 	return orderDtos;
-	// }
-	// @Override
-	// public User getUserByEmail(String email) {
-	// 	// TODO Auto-generated method stub
-	// 	throw new UnsupportedOperationException("Unimple  mented method 'getUserByEmail'");
-	// }
 	@Override
 	public boolean insert(UserDto s) {
 		return userRepository.save(s.convertToEntity()) != null;
@@ -182,5 +145,19 @@ public class UserServiceImpl implements IUserService{
 		
 		return convertUserDto(userRepository.save(user));
     }
+	@Override
+	public boolean changePassword(String email, String oldPassword, String newPassword) {
+		User user = userRepository.findByEmail(email);
+		if (user == null) {
+			return false;
+		}
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		if (passwordEncoder.matches(oldPassword, user.getPasswordHash())) {
+			user.setPasswordHash(passwordEncoder.encode(newPassword));
+			userRepository.save(user);
+			return true;
+		}
+		return false;
+	}
 }
 

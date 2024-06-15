@@ -17,4 +17,6 @@ public interface IUserService extends UserDetailsService, IBaseService<UserDto, 
     List<OrderDto> getOrdersByEmail(String email);
     String getUserID(String email);
     UserDto updateUserRole(String id, String role);
+    boolean changePassword(String email, String oldPassword, String newPassword);
+    
 }

@@ -85,6 +85,16 @@ public class UserResource {
 		response.put("success", userService.update(user));
 		return ResponseEntity.ok(response);
 	}
+
+	@PostMapping("/change-password")
+	public ResponseEntity changePassword(@RequestBody Map<String, Object> passwords) {
+		Map<String, Object> response = new HashMap<>();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String email = authentication.getName();
+		System.out.println(email);
+		response.put("success", userService.changePassword(email, (String) passwords.get("oldPassword"), (String) passwords.get("newPassword")));
+		return ResponseEntity.ok(response);
+	}
 	
 	@GetMapping("/shopping-cart")
 	public ResponseEntity getOrders() {

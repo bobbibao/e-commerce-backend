@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,19 +52,6 @@ public class AuthController {
         response.put("token", jwt);
         response.put("id", userID);
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/getShoppingCart")
-    public ResponseEntity<?> getShoppingCart() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        System.out.println("Username: " + username);
-        // Logic để lấy giỏ hàng của người dùng hiện tại dựa trên username
-        Map<String, Object> cart = new HashMap<>();
-        cart.put("item1", "Apple");
-        cart.put("item2", "Banana");
-
-        return ResponseEntity.ok(cart);
     }
 }
 
