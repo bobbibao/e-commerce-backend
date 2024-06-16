@@ -41,6 +41,21 @@ public class Supplier implements Serializable{
 	@Column(name = "contact_email")
 	private String contactEmail;
 
+	@Column(name = "supplier_status")
+	private boolean supplierStatus;
+
+	@Column(name = "supplier_description")
+	private String supplierDescription;
+
+	@Column(name = "supplier_logo")
+	private String supplierLogo;
+
+	// @Column(name = "supplier_banner")
+	// private String supplierBanner;
+
+	@Column(name = "supplier_website")
+	private String supplierWebsite;
+
 //	@Column(name = "address")
 	@Embedded
 	private Address address;

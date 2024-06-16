@@ -74,8 +74,8 @@ public class Product implements Serializable {
     @Column(name = "is_deleted", columnDefinition = "boolean default false")
     private boolean isDeleted;
     
-//    @Column(name = "import_price")
-//    private Double price;
+   @Column(name = "import_price")
+   private Double price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")

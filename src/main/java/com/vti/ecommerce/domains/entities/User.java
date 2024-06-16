@@ -43,8 +43,8 @@ public class User implements Serializable {
 	@Column(name = "phone")
 	private String phone;
 
-	// @Column(name = "gender")
-	// private String gender;
+	@Column(name = "gender")
+	private String gender;
 	
 	@Column(name = "registration_date")
 	private LocalDate registrationDate;
@@ -61,8 +61,8 @@ public class User implements Serializable {
 	@Column(name = "password_reset_expiration")
 	private String passwordResetExpiration;
 	
-	// @Column(name = "is_active")
-	// private boolean isActive;
+	@Column(name = "is_active")
+	private boolean isActive;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
