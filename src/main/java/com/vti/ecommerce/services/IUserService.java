@@ -18,5 +18,8 @@ public interface IUserService extends UserDetailsService, IBaseService<UserDto, 
     String getUserID(String email);
     UserDto updateUserRole(String id, String role);
     boolean changePassword(String email, String oldPassword, String newPassword);
-    
+    boolean sendOtpToEmail(String email);
+    void sendOtpEmail(String to, String otp);
+    boolean verifyOtp(String email, String otp);
+
 }

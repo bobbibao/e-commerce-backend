@@ -1,19 +1,25 @@
 package com.vti.ecommerce.services.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.vti.ecommerce.domains.entities.Otp;
 import com.vti.ecommerce.domains.entities.Role;
 import com.vti.ecommerce.domains.entities.User;
 import com.vti.ecommerce.domains.entities.UserRole;
 import com.vti.ecommerce.repositories.IOrderRepository;
+import com.vti.ecommerce.repositories.IOtpRepository;
 import com.vti.ecommerce.repositories.IUserRepository;
 import com.vti.ecommerce.services.IUserService;
 import com.vti.ecommerce.services.dto.CustomUserDetails;
@@ -21,17 +27,65 @@ import com.vti.ecommerce.services.dto.OrderDto;
 import com.vti.ecommerce.services.dto.UserDto;
 import com.vti.ecommerce.services.dto.WishListDto;
 
+
 @Service
 public class UserServiceImpl implements IUserService{
 
 	
 	private final IUserRepository userRepository;
 	private final IOrderRepository orderRepository;
+    private final IOtpRepository otpRepository;
+    private JavaMailSender mailSender;
 
-	public UserServiceImpl(IUserRepository userRepository, IOrderRepository orderRepository) {
+    private Random random = new Random();
+
+	public UserServiceImpl(IUserRepository userRepository, IOrderRepository orderRepository, IOtpRepository otpRepository, JavaMailSender mailSender) {
 		this.userRepository = userRepository;
 		this.orderRepository = orderRepository;
+		this.otpRepository = otpRepository;
+		 this.mailSender = mailSender;
 	}
+
+    public boolean sendOtpToEmail(String email) {
+        User existingUser = userRepository.findByEmail(email);
+        if (existingUser != null) {
+            return false; // Email already registered
+        }
+
+        String otp = String.valueOf(random.nextInt(999999));
+        Otp otpEntity = new Otp();
+        otpEntity.setOtp(otp);
+        otpEntity.setExpirationTime(LocalDateTime.now().plusMinutes(10));
+        otpEntity.setUser(null); // No associated user yet
+        otpRepository.save(otpEntity);
+
+        sendOtpEmail(email, otp);
+        return true;
+    }
+
+    public void sendOtpEmail(String to, String otp) {
+
+         SimpleMailMessage message = new SimpleMailMessage();
+         message.setTo(to);
+         message.setSubject("OTP for Email Verification");
+         message.setText("Your OTP is: " + otp);
+         mailSender.send(message);
+    }
+    
+    public boolean verifyOtp(String email, String otp) {
+		Otp otpEntity = otpRepository.findByOtp(otp);
+        if (otpEntity == null || otpEntity.getExpirationTime().isBefore(LocalDateTime.now())) {
+            return false;
+        }
+
+        // OTP is valid
+        User user = new User();
+        user.setEmail(email);
+        otpEntity.setUser(user);
+        otpRepository.save(otpEntity);
+        return true;
+    }
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByEmail(username);
