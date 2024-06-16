@@ -86,5 +86,6 @@ public class User implements Serializable {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<AdminActivity> adminActivities;
+	
 }
 
