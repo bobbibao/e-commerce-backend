@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/submit-email", "/verify-otp", "/complete-registration").permitAll()
+                .requestMatchers("/submit-email", "/verify-otp").permitAll()
                 .requestMatchers("/login").permitAll()
                 .requestMatchers("/register").permitAll()
                 .requestMatchers("/order/**").authenticated()

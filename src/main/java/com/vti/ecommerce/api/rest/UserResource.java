@@ -66,14 +66,6 @@ public class UserResource {
         boolean isValid = userService.verifyOtp(email, otp);
         return isValid ? "OTP verified. You can now complete your registration." : "Invalid OTP or OTP has expired.";
     }
-	
-	
-	// @GetMapping
-	// public String a() {
-	// 	String token = tokenProvider.generateToken("bobbibao");
-	// 	System.out.println("asd" + token);
-	// 	return token;
-	// }
 
 	@GetMapping
 	public ResponseEntity getAll() throws Exception {

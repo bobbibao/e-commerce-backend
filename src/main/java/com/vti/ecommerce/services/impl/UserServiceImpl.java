@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,24 +28,22 @@ import com.vti.ecommerce.services.dto.OrderDto;
 import com.vti.ecommerce.services.dto.UserDto;
 import com.vti.ecommerce.services.dto.WishListDto;
 
-
 @Service
 public class UserServiceImpl implements IUserService{
 
+	@Autowired
+	private IUserRepository userRepository;
 	
-	private final IUserRepository userRepository;
-	private final IOrderRepository orderRepository;
-    private final IOtpRepository otpRepository;
+	@Autowired
+	private IOrderRepository orderRepository;
+	
+	@Autowired
+    private IOtpRepository otpRepository;
+	
+	@Autowired
     private JavaMailSender mailSender;
 
     private Random random = new Random();
-
-	public UserServiceImpl(IUserRepository userRepository, IOrderRepository orderRepository, IOtpRepository otpRepository, JavaMailSender mailSender) {
-		this.userRepository = userRepository;
-		this.orderRepository = orderRepository;
-		this.otpRepository = otpRepository;
-		 this.mailSender = mailSender;
-	}
 
     public boolean sendOtpToEmail(String email) {
         User existingUser = userRepository.findByEmail(email);
