@@ -1,5 +1,6 @@
 package com.vti.ecommerce.services.impl;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.repositories.IProductRepository;
 import com.vti.ecommerce.services.IProductService;
@@ -21,8 +26,24 @@ public class ProductServiceImpl implements IProductService {
 	@Autowired
 	private IProductRepository productRepository;
 
-	public ProductServiceImpl(IProductRepository productRepository) {
-		this.productRepository = productRepository;
+	 @Autowired
+    private AmazonS3 s3Client;
+
+    private final String bucketName = "vti-ecommerce";
+
+	@Override
+    public String uploadFile(MultipartFile file) throws IOException {
+		long maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
+		if (file.getSize() > maxFileSize) {
+			throw new RuntimeException("File size exceeds the permissible limit of 5MB");
+		}
+		String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		ObjectMetadata metadata = new ObjectMetadata();
+		metadata.setContentType(file.getContentType());
+		metadata.setContentLength(file.getSize());
+		s3Client.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata));
+		return s3Client.getUrl(bucketName, fileName).toString();
 	}
 
 	@Override
