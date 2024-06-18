@@ -1,6 +1,5 @@
 package com.vti.ecommerce.api.rest;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vti.ecommerce.config.jwt.TokenProvider;
-import com.vti.ecommerce.domains.entities.Otp;
-import com.vti.ecommerce.domains.entities.User;
-import com.vti.ecommerce.repositories.IOtpRepository;
 import com.vti.ecommerce.services.IOrderService;
 import com.vti.ecommerce.services.IUserService;
 import com.vti.ecommerce.services.dto.OrderDto;
@@ -56,15 +52,16 @@ public class UserResource {
 	}
 	
 	@PostMapping("/submit-email")
-    public String submitEmail(@RequestParam String email) {
+    public ResponseEntity submitEmail(@RequestParam String email) {
+		System.out.println(email);
         boolean otpSent = userService.sendOtpToEmail(email);
-        return otpSent ? "OTP sent to email." : "Email already registered.";
+		return otpSent ? ResponseEntity.ok("OTP sent to email.") : ResponseEntity.badRequest().body("Email already registered.");
     }
 
 	@PostMapping("/verify-otp")
-    public String verifyOtp(@RequestParam String email, @RequestParam String otp) {
+    public ResponseEntity verifyOtp(@RequestParam String email, @RequestParam String otp) {
         boolean isValid = userService.verifyOtp(email, otp);
-        return isValid ? "OTP verified. You can now complete your registration." : "Invalid OTP or OTP has expired.";
+		return isValid ? ResponseEntity.ok("OTP verified.") : ResponseEntity.badRequest().body("Invalid OTP.");
     }
 
 	@GetMapping

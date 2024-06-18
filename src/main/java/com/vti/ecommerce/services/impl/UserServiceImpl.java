@@ -45,6 +45,7 @@ public class UserServiceImpl implements IUserService{
 
     private Random random = new Random();
 
+	@Override
     public boolean sendOtpToEmail(String email) {
         User existingUser = userRepository.findByEmail(email);
         if (existingUser != null) {
@@ -62,6 +63,7 @@ public class UserServiceImpl implements IUserService{
         return true;
     }
 
+	@Override
     public void sendOtpEmail(String to, String otp) {
 
          SimpleMailMessage message = new SimpleMailMessage();
@@ -71,6 +73,7 @@ public class UserServiceImpl implements IUserService{
          mailSender.send(message);
     }
     
+	@Override
     public boolean verifyOtp(String email, String otp) {
 		Otp otpEntity = otpRepository.findByOtp(otp);
         if (otpEntity == null || otpEntity.getExpirationTime().isBefore(LocalDateTime.now())) {
@@ -79,6 +82,7 @@ public class UserServiceImpl implements IUserService{
 
         // OTP is valid
         User user = new User();
+		user.setUserID(otpEntity.getId()+LocalDateTime.now().toString());
         user.setEmail(email);
         otpEntity.setUser(user);
         otpRepository.save(otpEntity);
