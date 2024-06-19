@@ -14,6 +14,7 @@ public class UserDto {
     private String id;
     private String name;
     private String lastname;
+    private String gender;
     private String email;
     private String phone;
     private String adress;
@@ -24,11 +25,11 @@ public class UserDto {
     public UserDto() {
     }
 
-    public UserDto(String id, String name, String lastname, String email, String phone, String adress, String password, String role,
+    public UserDto(String name, String lastname, String gender, String email, String phone, String adress, String password, String role,
             List<WishListDto> userWishlist) {
-        this.id = id;
         this.name = name;
         this.lastname = lastname;
+        this.gender = gender;
         this.email = email;
         this.phone = phone;
         this.adress = adress;
@@ -42,14 +43,27 @@ public class UserDto {
         Address address = new Address();
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         address.setAddress(this.adress);
-        user.setUserID(this.id);
         user.setFirstName(this.name);
         user.setLastName(this.lastname);
+        user.setGender(this.gender);
         user.setEmail(this.email);
         user.setPhone(this.phone);
         user.setAddress(address);
         user.setPasswordHash(encoder.encode(this.password));
         
+        return user;
+    }
+
+    public User convertToEntity(User user) {
+        Address address = new Address();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        address.setAddress(this.adress);
+        user.setFirstName(this.name);
+        user.setLastName(this.lastname);
+        user.setGender(this.gender);
+        user.setPhone(this.phone);
+        user.setAddress(address);
+        user.setPasswordHash(encoder.encode(this.password));
         return user;
     }
 
