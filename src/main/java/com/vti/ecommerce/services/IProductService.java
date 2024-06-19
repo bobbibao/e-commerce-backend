@@ -7,9 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.services.dto.ProductDto;
+import com.vti.ecommerce.services.dto.ProductForSave;
 
 public interface IProductService extends IBaseService<ProductDto, Long>{
    Product getProduct(Long id);
+   ProductForSave create(ProductForSave productForSave);
 //    ProductDto createProduct(ProductDto productDto);
 //    ProductDto updateProduct(Long id, ProductDto productDto);
 //    boolean deleteProduct(Long id);

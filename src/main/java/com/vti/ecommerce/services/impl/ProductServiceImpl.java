@@ -1,7 +1,9 @@
 package com.vti.ecommerce.services.impl;
-
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,9 +17,16 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.vti.ecommerce.domains.entities.Product;
+import com.vti.ecommerce.domains.entities.ProductPrice;
+import com.vti.ecommerce.domains.entities.RestockHistory;
+import com.vti.ecommerce.domains.entities.Supplier;
+import com.vti.ecommerce.domains.enumeration.ProductCategory;
+import com.vti.ecommerce.domains.enumeration.ProductGender;
 import com.vti.ecommerce.repositories.IProductRepository;
+import com.vti.ecommerce.repositories.ISupplierRepository;
 import com.vti.ecommerce.services.IProductService;
 import com.vti.ecommerce.services.dto.ProductDto;
+import com.vti.ecommerce.services.dto.ProductForSave;
 import com.vti.ecommerce.services.dto.ReviewDto;
 
 @Service
@@ -26,7 +35,10 @@ public class ProductServiceImpl implements IProductService {
 	@Autowired
 	private IProductRepository productRepository;
 
-	 @Autowired
+	@Autowired
+	private ISupplierRepository supplierRepository;
+	
+	@Autowired
     private AmazonS3 s3Client;
 
     private final String bucketName = "vti-ecommerce";
@@ -238,5 +250,44 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductDto> searchProduct(String search, int page, int limit) {
 		return this.productRepository.findByProductNameContaining(search).stream().skip((page - 1) * limit).limit(limit).map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public ProductForSave create(ProductForSave productForSave) {
+        Product product = new Product();
+		RestockHistory history = new RestockHistory();
+        product.setProductName(productForSave.getName());
+        product.setBrandName(productForSave.getBrand());
+        product.setDescription(productForSave.getDescription());
+        product.setCategory(ProductCategory.valueOf(productForSave.getCategory()));
+        product.setAvailableSize( new HashSet<>(Arrays.asList(productForSave.getAvailableSizes().split(","))));
+        product.setPrice(productForSave.getImportPrice());
+        product.setInStock(true);
+		product.setCreateAt(LocalDate.now());
+		product.setGender(ProductGender.MALE);	
+		product.setProductCode(productForSave.getSku());
+		product.setRating(0);
+		product.setImageURL(productForSave.getMainImage());
+		product.setAdditionalImageURLs(
+			Arrays.asList(productForSave.getAdditionalImages())
+		);
+		product.setDeleted(false);
+		Supplier supplier = supplierRepository.findById(productForSave.getSupplier()).get();
+		product.setSupplier(supplier);
+		history.setProduct(product);
+		history.setQuantity(productForSave.getStock());
+		history.setRestockDate(LocalDateTime.now());
+		history.setSupplier(supplier);
+		product.getRestockHistory().add(history);
+
+		ProductPrice price = new ProductPrice();
+		price.setProduct(product);
+		price.setPriceValue(productForSave.getPrice());
+		price.setStartDate(LocalDateTime.now());
+		price.setPriceType("standard");
+		product.getPrices().add(price);
+		
+		productRepository.save(product);
+		return productForSave;
     }
 }
