@@ -1,7 +1,10 @@
 package com.vti.ecommerce.api.rest;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.vti.ecommerce.services.IProductService;
 import com.vti.ecommerce.services.dto.ProductDto;
+import com.vti.ecommerce.services.dto.ProductForSave;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -66,9 +70,42 @@ public class ProductResource {
 				ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 	}
 
-	@PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        String fileName = productService.uploadFile(file);
-		return ResponseEntity.ok("File uploaded: " + fileName);
-    }
+	@PostMapping("/uploadFiles")
+	public ResponseEntity<Map<String, Object>> uploadFiles(
+		@RequestParam("mainImage") MultipartFile mainImage,
+		@RequestParam("additionalImages") List<MultipartFile> additionalImages) throws IOException {
+
+		// Logging to debug received files
+		System.out.println("Received main image: " + mainImage.getOriginalFilename());
+		System.out.println("Received additional images: " + additionalImages.size());
+
+		// Upload the main image and get the URL
+		// split https://
+		String mainImageUrl = productService.uploadFile(mainImage).split("https://")[1];
+
+		// Upload additional images and get the URLs
+		List<String> additionalImageUrls = new ArrayList<>();
+		for (MultipartFile image : additionalImages) {
+			String imageUrl = productService.uploadFile(image).split("https://")[1];
+			additionalImageUrls.add(imageUrl);
+		}
+
+		// Create response map
+		Map<String, Object> response = new HashMap<>();
+		response.put("mainImage", mainImageUrl);
+		response.put("additionalImages", additionalImageUrls);
+
+		return ResponseEntity.ok(response);
+
+	}
+	// @PostMapping("/upload")
+    // public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    //     String fileName = productService.uploadFile(file);
+	// 	return ResponseEntity.ok("File uploaded: " + fileName);
+    // }
+	@PostMapping
+	public ResponseEntity<ProductForSave> createProduct(@RequestBody ProductForSave productForSave){
+		System.out.println("productForSave: " + productForSave);
+		return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(productForSave));
+	}
 }

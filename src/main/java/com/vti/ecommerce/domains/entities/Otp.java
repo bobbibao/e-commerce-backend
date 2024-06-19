@@ -31,7 +31,7 @@ public class Otp implements Serializable{
     @Column(name = "expiration_time" ,nullable = false)
     private LocalDateTime expirationTime;
 
-    @ManyToOne(cascade= CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade= CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user; 
 }

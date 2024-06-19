@@ -25,13 +25,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
 @NoArgsConstructor
 @Table(name = "products")
+@Getter @Setter
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 5902886343031436632L;
@@ -110,7 +111,7 @@ public class Product implements Serializable {
     private List<RestockHistory> restockHistory;
     
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
     

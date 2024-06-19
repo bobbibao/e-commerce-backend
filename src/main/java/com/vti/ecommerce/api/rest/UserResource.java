@@ -59,8 +59,8 @@ public class UserResource {
     }
 
 	@PostMapping("/verify-otp")
-    public ResponseEntity verifyOtp(@RequestParam String email, @RequestParam String otp) {
-        boolean isValid = userService.verifyOtp(email, otp);
+    public ResponseEntity verifyOtp(@RequestParam String email, @RequestParam String otp, @RequestBody String id) {
+        boolean isValid = userService.verifyOtp(email, otp, id);
 		return isValid ? ResponseEntity.ok("OTP verified.") : ResponseEntity.badRequest().body("Invalid OTP.");
     }
 
