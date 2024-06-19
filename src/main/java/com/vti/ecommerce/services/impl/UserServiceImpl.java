@@ -74,7 +74,7 @@ public class UserServiceImpl implements IUserService{
     }
     
 	@Override
-    public boolean verifyOtp(String email, String otp) {
+    public boolean verifyOtp(String email, String otp, String id) {
 		Otp otpEntity = otpRepository.findByOtp(otp);
         if (otpEntity == null || otpEntity.getExpirationTime().isBefore(LocalDateTime.now())) {
             return false;
@@ -82,7 +82,7 @@ public class UserServiceImpl implements IUserService{
 
         // OTP is valid
         User user = new User();
-		user.setUserID(otpEntity.getId()+LocalDateTime.now().toString());
+		user.setUserID(id);
         user.setEmail(email);
         otpEntity.setUser(user);
         otpRepository.save(otpEntity);
@@ -109,7 +109,12 @@ public class UserServiceImpl implements IUserService{
 	}
 	@Override
 	public boolean insert(UserDto s) {
-		return userRepository.save(s.convertToEntity()) != null;
+		User user = userRepository.findByEmail(s.getEmail());
+		if (user != null) {
+			return false;
+		}
+		userRepository.save(s.convertToEntity(user));
+		return true;
 	}
 	@Override
 	public boolean update(UserDto s) {
