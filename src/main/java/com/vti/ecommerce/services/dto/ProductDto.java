@@ -26,6 +26,8 @@ public class ProductDto {
     private LocalDate productionDate;
     private Set<String> availableSizes;
     private int totalReviewCount;
+    private int stock;
+    private int sold;
     private double price;
     private List<String> additionalImageUrls;
     private List<ReviewDto> reviews;
@@ -36,7 +38,7 @@ public class ProductDto {
     public ProductDto(long id, String productCode, String name, String description, boolean isInStock, int rating,
             String gender, String category, String brandName, String imageUrl, LocalDate productionDate,
             Set<String> availableSizes, int totalReviewCount, double price, List<String> additionalImageUrls,
-            List<ReviewDto> reviews) {
+            List<ReviewDto> reviews, int stock, int sold) {
         this.id = id;
         this.productCode = productCode;
         this.name = name;
@@ -53,6 +55,8 @@ public class ProductDto {
         this.price = price;
         this.additionalImageUrls = additionalImageUrls;
         this.reviews = reviews;
+        this.stock = stock;
+        this.sold = sold;
     }
 
     public Product toEntity() {

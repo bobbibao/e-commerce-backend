@@ -9,9 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vti.ecommerce.domains.entities.Inventory;
 import com.vti.ecommerce.domains.entities.Order;
 import com.vti.ecommerce.domains.entities.OrderDetail;
 import com.vti.ecommerce.domains.entities.OrderStatusHistory;
+import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.domains.entities.User;
 import com.vti.ecommerce.domains.enumeration.OrderStatus;
 import com.vti.ecommerce.repositories.IOrderRepository;
@@ -95,35 +97,40 @@ public class OrderServiceImpl implements IOrderService{
 //         return orderDto;
 //    }
    public Order convertToOrder(OrderDto orderDto) {
-         Order order = new Order();
-         User user = userRepository.findById(orderDto.getUserId()).get();
-            order.setOrderID(orderDto.getId());
-            order.setUser(user);
-            order.setOrderTotal(orderDto.getSubtotal());
-            order.setOrderDate(LocalDateTime.now());
+        Order order = new Order();
+        User user = userRepository.findById(orderDto.getUserId()).get();
+        order.setOrderID(orderDto.getId());
+        order.setUser(user);
+        order.setOrderTotal(orderDto.getSubtotal());
+        order.setOrderDate(LocalDateTime.now());
 
-            // Set<OrderStatusHistory> orderStatusHistories = order.getOrderStatusHistory();
-            Set<OrderStatusHistory> orderStatusHistories = orderStatusHistoryRepository.findByOrderId(orderDto.getId());
-            OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
-            orderStatusHistory.setOrderStatus(OrderStatus.PROCESSING);
-            orderStatusHistory.setOrder(order);
-            orderStatusHistory.setChangeAt(LocalDateTime.now());
-            orderStatusHistory.setChangeBy(user);
-            orderStatusHistories.add(orderStatusHistory);
-            order.setOrderStatusHistory(orderStatusHistories);
+        // Set<OrderStatusHistory> orderStatusHistories = order.getOrderStatusHistory();
+        Set<OrderStatusHistory> orderStatusHistories = orderStatusHistoryRepository.findByOrderId(orderDto.getId());
+        OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
+        orderStatusHistory.setOrderStatus(OrderStatus.PROCESSING);
+        orderStatusHistory.setOrder(order);
+        orderStatusHistory.setChangeAt(LocalDateTime.now());
+        orderStatusHistory.setChangeBy(user);
+        orderStatusHistories.add(orderStatusHistory);
+        order.setOrderStatusHistory(orderStatusHistories);
 
-            order.setOrderDetails(
-                orderDto.getCartItems().stream().map(
-                    orderDetailDto -> {
-                        OrderDetail orderDetail = new OrderDetail();
-                        orderDetail.setProduct(productRepository.findById(orderDetailDto.getId()).get());
-                        orderDetail.setAmount(orderDetailDto.getAmount());
-                        orderDetail.setSelectedSize(orderDetailDto.getSelectedSize());
-                        orderDetail.setOrder(order);
-                        return orderDetail;
-                    }
-                ).collect(Collectors.toList())
-            );
+        order.setOrderDetails(
+            orderDto.getCartItems().stream().map(
+                orderDetailDto -> {
+                    OrderDetail orderDetail = new OrderDetail();
+                    Product product = productRepository.findById(orderDetailDto.getId()).get();
+                    Inventory inventory = product.getInventory();
+                    inventory.setQuantityInStock(inventory.getQuantityInStock() - orderDetailDto.getAmount());
+                    inventory.setQuantitySold(inventory.getQuantitySold() + orderDetailDto.getAmount());
+                    product.setInventory(inventory);
+                    orderDetail.setProduct(product);
+                    orderDetail.setAmount(orderDetailDto.getAmount());
+                    orderDetail.setSelectedSize(orderDetailDto.getSelectedSize());
+                    orderDetail.setOrder(order);
+                    return orderDetail;
+                }
+            ).collect(Collectors.toList())
+        );
             
         return order;
    }
@@ -201,7 +208,9 @@ public class OrderServiceImpl implements IOrderService{
     public boolean createOrder(String email, Map<String, Object> newOrder) {
         try{
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProduct(productRepository.findById(Long.valueOf(newOrder.get("productId").toString())).get());
+            Product product = productRepository.findById(Long.valueOf(newOrder.get("productId").toString())).get();
+
+            orderDetail.setProduct(product);
             orderDetail.setAmount((Integer) newOrder.get("amount"));
             orderDetail.setSelectedSize((String) newOrder.get("size").toString());
 

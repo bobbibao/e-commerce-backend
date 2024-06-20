@@ -23,5 +23,17 @@ public interface IProductRepository extends JpaRepository<Product, Long>{
     @Query(value = "SELECT category_id, COUNT(*) as count FROM product GROUP BY category_id", nativeQuery = true)
     List<Map<String, Object>> countProductByCategory();
 
+    //sold:
+    //liệt kê số lượng sản phẩm đã bán được theo từng id sản phẩm
+    @Query(value = "SELECT product_id, SUM(quantity) as count FROM order_detail GROUP BY product_id", nativeQuery = true)
+    List<Map<String, Object>> countProductSold();
 
+    //số lượng tồn kho, tổng số lượng sản phẩm đã bán, tổng số lượng sản phẩm
+    //số lượng tồn kho (quantity_in_stock) của :product_id
+    @Query(value = "SELECT quantity_in_stock FROM inventories WHERE product_id = :product_id", nativeQuery = true)
+    int countProductInStock(Long product_id);
+
+    //tổng số lượng sản phẩm đã bán (quantity_sold) của :product_id
+    @Query(value = "SELECT quantity_in_stock FROM inventories WHERE product_id = :product_id", nativeQuery = true)
+    int countProductSold(Long product_id);
 }

@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.services.dto.ProductDto;
 import com.vti.ecommerce.services.dto.ProductForSave;
+import com.vti.ecommerce.services.dto.ProductImport;
 
 public interface IProductService extends IBaseService<ProductDto, Long>{
    Product getProduct(Long id);
@@ -18,4 +19,6 @@ public interface IProductService extends IBaseService<ProductDto, Long>{
     List<ProductDto> getProductByPage(int page, int limit);
     List<ProductDto> searchProduct(String search, int page, int limit);
     String uploadFile(MultipartFile file) throws IOException;
+    //nhập kho:
+    void importProducts(List<ProductImport> productImports, Long supplierId);
 }
