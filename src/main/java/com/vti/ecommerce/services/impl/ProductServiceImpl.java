@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.vti.ecommerce.domains.entities.Inventory;
 import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.domains.entities.ProductPrice;
 import com.vti.ecommerce.domains.entities.RestockHistory;
@@ -27,6 +28,7 @@ import com.vti.ecommerce.repositories.ISupplierRepository;
 import com.vti.ecommerce.services.IProductService;
 import com.vti.ecommerce.services.dto.ProductDto;
 import com.vti.ecommerce.services.dto.ProductForSave;
+import com.vti.ecommerce.services.dto.ProductImport;
 import com.vti.ecommerce.services.dto.ReviewDto;
 
 @Service
@@ -120,7 +122,15 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public Optional<ProductDto> getById(Long p) {
-		return this.productRepository.findById(p).map(this::convertToDto);
+		System.out.println("ProductServiceImpl.getById()");
+		int quantity = productRepository.countProductInStock(p);
+		System.out.println("quantity: " + quantity);
+		int sold = productRepository.countProductSold(p);
+		Product product = productRepository.findById(p).get();
+		ProductDto productDto = convertToDto(product);
+		productDto.setStock(quantity);
+		productDto.setSold(sold);
+		return Optional.of(productDto);
 	}
 	
 
@@ -256,6 +266,11 @@ public class ProductServiceImpl implements IProductService {
     public ProductForSave create(ProductForSave productForSave) {
         Product product = new Product();
 		RestockHistory history = new RestockHistory();
+		Inventory inventory = new Inventory();
+		inventory.setQuantityInStock(productForSave.getStock());
+		inventory.setQuantitySold(0);
+		inventory.setLastUpdated(LocalDateTime.now());
+		
         product.setProductName(productForSave.getName());
         product.setBrandName(productForSave.getBrand());
         product.setDescription(productForSave.getDescription());
@@ -278,6 +293,7 @@ public class ProductServiceImpl implements IProductService {
 		history.setQuantity(productForSave.getStock());
 		history.setRestockDate(LocalDateTime.now());
 		history.setSupplier(supplier);
+		product.setInventory(inventory);
 		product.getRestockHistory().add(history);
 
 		ProductPrice price = new ProductPrice();
@@ -289,5 +305,24 @@ public class ProductServiceImpl implements IProductService {
 		
 		productRepository.save(product);
 		return productForSave;
+    }
+
+    @Override
+    public void importProducts(List<ProductImport> productImports, Long supplierId) {
+		Supplier supplier = supplierRepository.findById(supplierId).get();
+		productImports.stream().forEach(productImport -> {
+			Product product = productRepository.findById(productImport.getProductId()).get();
+			RestockHistory history = new RestockHistory();
+			Inventory inventory = product.getInventory();
+			inventory.setQuantityInStock(inventory.getQuantityInStock() + productImport.getQuantity());
+			inventory.setLastUpdated(LocalDateTime.now());
+
+			history.setProduct(product);
+			history.setQuantity(productImport.getQuantity());
+			history.setRestockDate(LocalDateTime.now());
+			history.setSupplier(supplier);
+			product.getRestockHistory().add(history);
+			productRepository.save(product);
+		});
     }
 }

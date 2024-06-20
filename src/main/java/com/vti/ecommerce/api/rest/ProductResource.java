@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.vti.ecommerce.services.IProductService;
 import com.vti.ecommerce.services.dto.ProductDto;
 import com.vti.ecommerce.services.dto.ProductForSave;
+import com.vti.ecommerce.services.dto.ProductImport;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -108,4 +109,13 @@ public class ProductResource {
 		System.out.println("productForSave: " + productForSave);
 		return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(productForSave));
 	}
+	
+// 	[Log] Products: – [{product: "203509790", quantity: "11"}, {product: "204349751", quantity: "22"}] (2) (ImportProductStockForm.jsx, line 612)
+// [Log] Supplier: – "2" (ImportProductStockForm.jsx, line 613)
+	@PostMapping("/import")
+	public ResponseEntity<String> importProducts(@RequestBody List<ProductImport> products, @RequestParam("supplier") String supplierId){
+		productService.importProducts(products, Long.valueOf(supplierId));
+		return ResponseEntity.ok("Imported successfully");
+	}
+
 }
