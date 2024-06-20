@@ -11,5 +11,9 @@ public interface IUserRepository extends JpaRepository<User, String>{
 	User findByEmail(String email);
 //	boolean save(User user);
 //	boolean deleteById(String userID);
+
+	//thống kê số lượng nam và nữ
+	// Map<String, Object> countUserByGender();
 	
+
 }
