@@ -38,7 +38,7 @@ public class OrderStatusHistory {
 	@Column(name = "change_at")
 	private LocalDateTime changeAt;
 	
-	@OneToOne
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name = "change_by", referencedColumnName = "user_id", unique = false)
 	private User changeBy;
 	

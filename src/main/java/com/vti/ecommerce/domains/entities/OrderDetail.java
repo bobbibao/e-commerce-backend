@@ -41,8 +41,8 @@ public class OrderDetail implements Serializable {
 	private String selectedSize;
 
 	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id", referencedColumnName = "product_id", nullable = false, unique=false)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id", referencedColumnName = "product_id", nullable = false)
 	private Product product;
 
 	@JsonBackReference

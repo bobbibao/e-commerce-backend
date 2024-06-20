@@ -43,8 +43,8 @@ public class WishList implements Serializable {
 	private String selectedSize;
 
 	@JsonManagedReference
-	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id", referencedColumnName = "product_id", nullable = false, unique=false)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id", referencedColumnName = "product_id", nullable = false)
 	private Product product;
 
 	@JsonBackReference
