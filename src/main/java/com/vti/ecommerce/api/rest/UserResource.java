@@ -59,8 +59,8 @@ public class UserResource {
     }
 
 	@PostMapping("/verify-otp")
-    public ResponseEntity verifyOtp(@RequestParam String email, @RequestParam String otp, @RequestBody String id) {
-        boolean isValid = userService.verifyOtp(email, otp, id);
+    public ResponseEntity verifyOtp(@RequestParam String email, @RequestParam String otp) {
+        boolean isValid = userService.verifyOtp(email, otp);
 		return isValid ? ResponseEntity.ok("OTP verified.") : ResponseEntity.badRequest().body("Invalid OTP.");
     }
 
@@ -72,6 +72,7 @@ public class UserResource {
 	
 	@PostMapping
 	public ResponseEntity createUser(@RequestBody UserDto user) {
+		System.out.println(user);
 		Map<String, Object> response = new HashMap<>();
 		response.put("success", userService.insert(user));
 		return ResponseEntity.ok(response);
