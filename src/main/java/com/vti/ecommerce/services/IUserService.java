@@ -20,6 +20,6 @@ public interface IUserService extends UserDetailsService, IBaseService<UserDto, 
     boolean changePassword(String email, String oldPassword, String newPassword);
     boolean sendOtpToEmail(String email);
     void sendOtpEmail(String to, String otp);
-    boolean verifyOtp(String email, String otp, String id);
+    boolean verifyOtp(String email, String otp);
 
 }

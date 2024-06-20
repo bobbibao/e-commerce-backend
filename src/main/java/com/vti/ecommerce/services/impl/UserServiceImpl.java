@@ -1,10 +1,14 @@
 package com.vti.ecommerce.services.impl;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.vti.ecommerce.domains.entities.Address;
 import com.vti.ecommerce.domains.entities.Otp;
 import com.vti.ecommerce.domains.entities.Role;
 import com.vti.ecommerce.domains.entities.User;
@@ -74,7 +79,7 @@ public class UserServiceImpl implements IUserService{
     }
     
 	@Override
-    public boolean verifyOtp(String email, String otp, String id) {
+    public boolean verifyOtp(String email, String otp) {
 		Otp otpEntity = otpRepository.findByOtp(otp);
         if (otpEntity == null || otpEntity.getExpirationTime().isBefore(LocalDateTime.now())) {
             return false;
@@ -82,7 +87,10 @@ public class UserServiceImpl implements IUserService{
 
         // OTP is valid
         User user = new User();
-		user.setUserID(id);
+
+		String uuid = UUID.randomUUID().toString();
+
+		user.setUserID(uuid);
         user.setEmail(email);
         otpEntity.setUser(user);
         otpRepository.save(otpEntity);
@@ -107,13 +115,42 @@ public class UserServiceImpl implements IUserService{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	@SuppressWarnings("null")
 	@Override
 	public boolean insert(UserDto s) {
 		User user = userRepository.findByEmail(s.getEmail());
-		if (user != null) {
+		if (user == null) {
 			return false;
 		}
-		userRepository.save(s.convertToEntity(user));
+        Address address = new Address();
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		UserRole userRole = new UserRole();
+		Role role = new Role();
+		role.setRoleName("user");
+		userRole.setRole(role);
+
+		otpRepository.deleteByUser(user);
+        address.setAddress(s.getAdress());
+        user.setGender(s.getGender());
+        user.setAddress(address);
+		user.setFirstName(s.getName());
+		user.setLastName(s.getLastname());
+		user.setPhone(s.getPhone());
+		user.setAddress(address);
+		user.setRegistrationDate(LocalDate.now());
+		user.setPasswordHash(encoder.encode(s.getPassword()));
+		user.setActive(true);
+		// user.setUserID(s.getId());
+		user.setUserRoles(
+			new HashSet<>(
+				Arrays.asList(
+					userRole
+				)
+			)
+		);
+		
+		userRole.setUser(user);
+		userRepository.save(user);
 		return true;
 	}
 	@Override
@@ -149,6 +186,7 @@ public class UserServiceImpl implements IUserService{
 		userDto.setId(user.getUserID());
 		userDto.setName(user.getFirstName());
 		userDto.setLastname(user.getLastName());
+		userDto.setGender(user.getGender());
 		userDto.setEmail(user.getEmail());
 		userDto.setPhone(user.getPhone());
 		userDto.setAdress(user.getAddress().getAddress());
