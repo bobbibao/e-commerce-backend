@@ -3,7 +3,6 @@ package com.vti.ecommerce.domains.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +38,7 @@ public class Coupon implements Serializable{
 	private String voucherDescription;
 
 	@Column(name = "discount_value")
-	private String discountValue;
+	private double discountValue;
 
 	@Column(name = "is_active")
 	private boolean isActive;
