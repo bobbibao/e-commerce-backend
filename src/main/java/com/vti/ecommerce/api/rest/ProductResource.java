@@ -43,9 +43,7 @@ public class ProductResource {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ProductDto> getProduct(@PathVariable Long id){
-		System.out.println("idasd: " + id);
 		Optional<ProductDto> product = productService.getById(id);
-		System.out.println("product: " + product);
 		return product.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
 	}
@@ -114,6 +112,7 @@ public class ProductResource {
 // [Log] Supplier: – "2" (ImportProductStockForm.jsx, line 613)
 	@PostMapping("/import")
 	public ResponseEntity<String> importProducts(@RequestBody List<ProductImport> products, @RequestParam("supplier") String supplierId){
+		products.forEach(System.out::println);
 		productService.importProducts(products, Long.valueOf(supplierId));
 		return ResponseEntity.ok("Imported successfully");
 	}

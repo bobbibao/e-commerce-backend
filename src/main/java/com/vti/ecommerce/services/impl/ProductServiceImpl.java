@@ -2,6 +2,7 @@ package com.vti.ecommerce.services.impl;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -123,10 +124,9 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	public Optional<ProductDto> getById(Long p) {
 		System.out.println("ProductServiceImpl.getById()");
-		int quantity = productRepository.countProductInStock(p);
-		System.out.println("quantity: " + quantity);
-		int sold = productRepository.countProductSold(p);
 		Product product = productRepository.findById(p).get();
+		int quantity = product.getInventory().getQuantityInStock();
+		int sold = product.getInventory().getQuantitySold();
 		ProductDto productDto = convertToDto(product);
 		productDto.setStock(quantity);
 		productDto.setSold(sold);
@@ -208,6 +208,11 @@ public class ProductServiceImpl implements IProductService {
 		}).collect(Collectors.toList()));
 		productDto.setCategory(product.getCategory().name());
 		productDto.setGender(product.getGender().name());
+		productDto.setArchived(product.isArchived());
+		productDto.setFeatured(product.isFeatured());
+		productDto.setStock(
+			product.getInventory().getQuantityInStock()
+		);
 		
 		try{
 			double price = product.getPrices().get(0).getPriceValue();
@@ -264,6 +269,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductForSave create(ProductForSave productForSave) {
+		System.out.println("ProductServiceImpl.create()");
         Product product = new Product();
 		RestockHistory history = new RestockHistory();
 		Inventory inventory = new Inventory();
@@ -276,7 +282,7 @@ public class ProductServiceImpl implements IProductService {
         product.setDescription(productForSave.getDescription());
         product.setCategory(ProductCategory.valueOf(productForSave.getCategory()));
         product.setAvailableSize( new HashSet<>(Arrays.asList(productForSave.getAvailableSizes().split(","))));
-        product.setPrice(productForSave.getImportPrice());
+        product.setImportPrice(productForSave.getImportPrice());
         product.setInStock(true);
 		product.setCreateAt(LocalDate.now());
 		product.setGender(ProductGender.MALE);	
@@ -286,7 +292,9 @@ public class ProductServiceImpl implements IProductService {
 		product.setAdditionalImageURLs(
 			Arrays.asList(productForSave.getAdditionalImages())
 		);
-		product.setDeleted(false);
+		product.setInStock(true);
+		product.setArchived(false);
+		product.setFeatured(false);
 		Supplier supplier = supplierRepository.findById(productForSave.getSupplier()).get();
 		product.setSupplier(supplier);
 		history.setProduct(product);
@@ -294,14 +302,24 @@ public class ProductServiceImpl implements IProductService {
 		history.setRestockDate(LocalDateTime.now());
 		history.setSupplier(supplier);
 		product.setInventory(inventory);
-		product.getRestockHistory().add(history);
+		try{
+			product.getRestockHistory().add(history);
+		}catch(Exception e){
+			product.setRestockHistory(new ArrayList<>());
+			product.getRestockHistory().add(history);
+		}
 
 		ProductPrice price = new ProductPrice();
 		price.setProduct(product);
 		price.setPriceValue(productForSave.getPrice());
 		price.setStartDate(LocalDateTime.now());
 		price.setPriceType("standard");
-		product.getPrices().add(price);
+		try{
+			product.getPrices().add(price);
+		}catch(Exception e){
+			product.setPrices(new ArrayList<>());
+			product.getPrices().add(price);
+		}
 		
 		productRepository.save(product);
 		return productForSave;
@@ -309,8 +327,10 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public void importProducts(List<ProductImport> productImports, Long supplierId) {
+		System.out.println("Supplier: " + supplierId);
 		Supplier supplier = supplierRepository.findById(supplierId).get();
 		productImports.stream().forEach(productImport -> {
+		System.out.println("Products: " + productImport.getProductId());
 			Product product = productRepository.findById(productImport.getProductId()).get();
 			RestockHistory history = new RestockHistory();
 			Inventory inventory = product.getInventory();
