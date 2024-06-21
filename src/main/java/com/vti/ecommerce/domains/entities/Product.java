@@ -73,11 +73,14 @@ public class Product implements Serializable {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "is_deleted", columnDefinition = "boolean default false")
-    private boolean isDeleted;
+    @Column(name = "is_archived", columnDefinition = "boolean default false")
+    private boolean isArchived;
+    
+    @Column(name = "is_featured", columnDefinition = "boolean default false")
+    private boolean isFeatured;
     
    @Column(name = "import_price")
-   private Double price;
+   private Double importPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
@@ -111,7 +114,7 @@ public class Product implements Serializable {
     @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<RestockHistory> restockHistory;
     
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	@JoinColumn(name = "inventory_id")
 	private Inventory inventory;
 	
