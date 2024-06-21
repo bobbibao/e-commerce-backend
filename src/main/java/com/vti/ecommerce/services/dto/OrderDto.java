@@ -60,7 +60,7 @@ public class OrderDto {
 
     public OrderDto(Order order){
         this.userId = order.getUser().getUserID()+"";
-        var orderStatuses = order.getOrderStatusHistory().stream().map(orderStatusHistory -> orderStatusHistory.getOrderStatus().toString()).collect(Collectors.toList());
+        List<String> orderStatuses = order.getOrderStatusHistory().stream().map(orderStatusHistory -> orderStatusHistory.getOrderStatus().toString()).collect(Collectors.toList());
         this.orderStatus = orderStatuses.get(orderStatuses.size()-1);
         this.orderDate = order.getOrderDate();
         this.subtotal = order.getOrderTotal();

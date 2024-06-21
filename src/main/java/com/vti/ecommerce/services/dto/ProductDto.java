@@ -31,6 +31,8 @@ public class ProductDto {
     private double price;
     private List<String> additionalImageUrls;
     private List<ReviewDto> reviews;
+    private boolean isArchived;
+    private boolean isFeatured;
 
     public ProductDto() {
     }
@@ -38,7 +40,7 @@ public class ProductDto {
     public ProductDto(long id, String productCode, String name, String description, boolean isInStock, int rating,
             String gender, String category, String brandName, String imageUrl, LocalDate productionDate,
             Set<String> availableSizes, int totalReviewCount, double price, List<String> additionalImageUrls,
-            List<ReviewDto> reviews, int stock, int sold) {
+            List<ReviewDto> reviews, int stock, int sold, boolean isArchived, boolean isFeatured) {
         this.id = id;
         this.productCode = productCode;
         this.name = name;
@@ -57,6 +59,8 @@ public class ProductDto {
         this.reviews = reviews;
         this.stock = stock;
         this.sold = sold;
+        this.isArchived = isArchived;
+        this.isFeatured = isFeatured;
     }
 
     public Product toEntity() {
@@ -67,7 +71,6 @@ public class ProductDto {
         product.setDescription(description);
         product.setInStock(isInStock);
         product.setRating(rating);
-        
         product.setGender(ProductGender.valueOf(name));
         // product.setCategory(category);
         product.setBrandName(brandName);
@@ -78,6 +81,8 @@ public class ProductDto {
         // product.setPrice(price);
         // product.setAdditionalImageUrls(additionalImageUrls);
         // product.setReviews(reviews);
+        product.setArchived(isArchived);
+        product.setFeatured(isFeatured);
         return product;
     }
     

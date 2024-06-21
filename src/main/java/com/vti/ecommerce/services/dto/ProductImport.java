@@ -2,12 +2,12 @@ package com.vti.ecommerce.services.dto;
 
 public class ProductImport {
     private Long productId;
-    private Integer quantity;
+    private int quantity;
 
     public ProductImport() {
     }
 
-    public ProductImport(Long productId, Integer quantity) {
+    public ProductImport(Long productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }
@@ -20,12 +20,20 @@ public class ProductImport {
         this.productId = productId;
     }
 
-    public Integer getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductImport{" +
+                "productId=" + productId +
+                ", quantity=" + quantity +
+                '}';
     }
     
 }

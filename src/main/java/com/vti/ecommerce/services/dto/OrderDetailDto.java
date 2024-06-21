@@ -51,7 +51,7 @@ public class OrderDetailDto {
         this.title = orderDetail.getProduct().getProductName();
         this.image = orderDetail.getProduct().getImageURL();
         this.rating = orderDetail.getProduct().getRating();
-        this.price = orderDetail.getPrice();
+        this.price = orderDetail.getProduct().getPrices().get(0).getPriceValue();
         this.brandName = orderDetail.getProduct().getBrandName();
         this.amount = orderDetail.getAmount();
         this.selectedSize = orderDetail.getSelectedSize();
