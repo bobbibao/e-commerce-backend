@@ -112,7 +112,7 @@ public class ProductServiceImpl implements IProductService {
 	public boolean deleteById(Long p) {
 		try {
 			Product product = this.productRepository.findById(p).get();
-			product.setDeleted(false);;
+			product.setArchived(false);;
 			this.productRepository.save(product);
 			return true;
 		} catch (Exception e) {
@@ -326,7 +326,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void importProducts(List<ProductImport> productImports, Long supplierId) {
+    public void importProducts(List<ProductImport> productImports, int supplierId) {
 		System.out.println("Supplier: " + supplierId);
 		Supplier supplier = supplierRepository.findById(supplierId).get();
 		productImports.stream().forEach(productImport -> {

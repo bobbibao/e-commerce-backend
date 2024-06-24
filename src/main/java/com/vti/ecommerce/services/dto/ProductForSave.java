@@ -24,14 +24,14 @@ public class ProductForSave {
     private double importPrice;
     private int stock;
     private String sku;
-    private long  supplier;
+    private int  supplier;
     private String mainImage;
     private String[] additionalImages;
 
     public ProductForSave() {
     }
 
-    public ProductForSave(String name, String brand, String description, String category, String availableSizes, double price, double importPrice, int stock, String sku, long supplier, String mainImage, String[] additionalImages) {
+    public ProductForSave(String name, String brand, String description, String category, String availableSizes, double price, double importPrice, int stock, String sku, int supplier, String mainImage, String[] additionalImages) {
         this.name = name;
         this.brand = brand;
         this.description = description;

@@ -20,5 +20,5 @@ public interface IProductService extends IBaseService<ProductDto, Long>{
     List<ProductDto> searchProduct(String search, int page, int limit);
     String uploadFile(MultipartFile file) throws IOException;
     //nhập kho:
-    void importProducts(List<ProductImport> productImports, Long supplierId);
+    void importProducts(List<ProductImport> productImports, int supplierId);
 }

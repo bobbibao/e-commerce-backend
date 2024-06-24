@@ -1,5 +1,6 @@
 package com.vti.ecommerce.services.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @ToString
-public class ProductDto {
+public class ProductDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 	private long id;
     private String productCode;
     private String name;
