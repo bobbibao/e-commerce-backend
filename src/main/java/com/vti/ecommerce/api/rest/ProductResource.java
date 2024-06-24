@@ -25,6 +25,8 @@ import com.vti.ecommerce.services.dto.ProductDto;
 import com.vti.ecommerce.services.dto.ProductForSave;
 import com.vti.ecommerce.services.dto.ProductImport;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/products")
@@ -41,12 +43,22 @@ public class ProductResource {
 		return ResponseEntity.ok(productService.getAll());
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<ProductDto> getProduct(@PathVariable Long id){
-		Optional<ProductDto> product = productService.getById(id);
-		return product.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id, HttpSession session){
+        System.out.println("Session ID: " + session.getId());
+        ProductDto product = (ProductDto) session.getAttribute("product");
+        System.out.println("Product from session: " + product);
+        if(product == null){
+            Optional<ProductDto> productOptional = productService.getById(id);
+            if(productOptional.isPresent()){
+                session.setAttribute("product", productOptional.get());
+                System.out.println("Product stored in session: " + productOptional.get());
+                return ResponseEntity.ok(productOptional.get());
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(product);
+    }
 	
 	// `http://localhost:8080/products?_page=1&_limit=8`
 	@GetMapping(params = {"_page", "_limit"})
@@ -113,7 +125,7 @@ public class ProductResource {
 	@PostMapping("/import")
 	public ResponseEntity<String> importProducts(@RequestBody List<ProductImport> products, @RequestParam("supplier") String supplierId){
 		products.forEach(System.out::println);
-		productService.importProducts(products, Long.valueOf(supplierId));
+		productService.importProducts(products, Integer.valueOf(supplierId));
 		return ResponseEntity.ok("Imported successfully");
 	}
 

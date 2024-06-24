@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.vti.ecommerce.domains.entities.Supplier;
 
-public interface ISupplierRepository extends JpaRepository<Supplier, Long> {
+public interface ISupplierRepository extends JpaRepository<Supplier, Integer> {
     // Supplier findById(Long supplierID);
     // SupplierDto findById(String supplierID);
     // List<Supplier> findAll();
