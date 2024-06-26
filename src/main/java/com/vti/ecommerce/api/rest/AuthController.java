@@ -53,6 +53,37 @@ public class AuthController {
         response.put("id", userID);
         return ResponseEntity.ok(response);
     }
+
+    // @PostMapping("/google")
+    // public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> request) {
+    //     String tokenId = request.get("tokenId");
+
+    //     // Gửi token đến Google để xác thực
+    //     GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+    //             .setAudience(Collections.singletonList("YOUR_GOOGLE_CLIENT_ID"))
+    //             .build();
+
+    //     GoogleIdToken idToken;
+    //     try {
+    //         idToken = verifier.verify(tokenId);
+    //         if (idToken != null) {
+    //             Payload payload = idToken.getPayload();
+    //             String userId = payload.getSubject();
+    //             String email = payload.getEmail();
+    //             boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+    //             String name = (String) payload.get("name");
+    //             String pictureUrl = (String) payload.get("picture");
+
+    //             // Xử lý đăng ký hoặc đăng nhập người dùng ở đây
+    //             return ResponseEntity.ok("Login successful!");
+    //         } else {
+    //             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+    //         }
+    //     } catch (GeneralSecurityException | IOException e) {
+    //         e.printStackTrace();
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error verifying token");
+    //     }
+    // }
 }
 
 class LoginRequest {
