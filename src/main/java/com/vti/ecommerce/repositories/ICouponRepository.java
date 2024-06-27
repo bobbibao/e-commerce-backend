@@ -7,5 +7,5 @@ import com.vti.ecommerce.domains.entities.Coupon;
 
 @Repository
 public interface ICouponRepository extends JpaRepository<Coupon, Long>{
-
+    Coupon findByCode(String code);
 }
