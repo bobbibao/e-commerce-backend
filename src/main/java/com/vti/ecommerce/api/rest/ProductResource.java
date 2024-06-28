@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,11 +34,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/products")
 public class ProductResource {
 
-	private final IProductService productService;
-
-	public ProductResource(IProductService productService) {
-		this.productService = productService;
-	}
+	@Autowired
+	private IProductService productService;
 
 	@GetMapping
 	public ResponseEntity<List<ProductDto>> getAllProduct(){
@@ -129,4 +128,13 @@ public class ProductResource {
 		return ResponseEntity.ok("Imported successfully");
 	}
 
+	@GetMapping("/search")
+	public ResponseEntity<Page<ProductDto>> searchProducts(
+			@RequestParam String productName,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Page<ProductDto> products = productService.searchProducts(productName, page, size);
+		System.out.println("products: " + products);
+		return ResponseEntity.ok(products);
+	}
 }

@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.vti.ecommerce.domains.enumeration.ProductCategory;
@@ -34,11 +36,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "products")
 @Getter @Setter
+@Document(indexName = "product")
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 5902886343031436632L;
 
 	@Id
+    @org.springframework.data.annotation.Id // Elasticsearch ID annotation
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long productID;
