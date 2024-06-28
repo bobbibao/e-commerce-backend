@@ -3,6 +3,7 @@ package com.vti.ecommerce.services;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.vti.ecommerce.domains.entities.Product;
@@ -19,6 +20,6 @@ public interface IProductService extends IBaseService<ProductDto, Long>{
     List<ProductDto> getProductByPage(int page, int limit);
     List<ProductDto> searchProduct(String search, int page, int limit);
     String uploadFile(MultipartFile file) throws IOException;
-    //nhập kho:
     void importProducts(List<ProductImport> productImports, int supplierId);
+    Page<ProductDto> searchProducts(String productName, int page, int size);
 }

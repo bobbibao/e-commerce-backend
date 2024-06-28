@@ -11,6 +11,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,8 +27,9 @@ import com.vti.ecommerce.domains.entities.RestockHistory;
 import com.vti.ecommerce.domains.entities.Supplier;
 import com.vti.ecommerce.domains.enumeration.ProductCategory;
 import com.vti.ecommerce.domains.enumeration.ProductGender;
-import com.vti.ecommerce.repositories.IProductRepository;
-import com.vti.ecommerce.repositories.ISupplierRepository;
+import com.vti.ecommerce.repositories.elasticsearch.IProductSearchRepository;
+import com.vti.ecommerce.repositories.jpa.IProductRepository;
+import com.vti.ecommerce.repositories.jpa.ISupplierRepository;
 import com.vti.ecommerce.services.IProductService;
 import com.vti.ecommerce.services.dto.ProductDto;
 import com.vti.ecommerce.services.dto.ProductForSave;
@@ -43,6 +47,9 @@ public class ProductServiceImpl implements IProductService {
 	
 	@Autowired
     private AmazonS3 s3Client;
+	
+	@Autowired
+    private IProductSearchRepository productSearchRepository;
 
     private final String bucketName = "vti-ecommerce";
 
@@ -345,4 +352,13 @@ public class ProductServiceImpl implements IProductService {
 			productRepository.save(product);
 		});
     }
+
+	@Override
+	public Page<ProductDto> searchProducts(String productName, int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		// Using wildcard search for more flexible results
+		Page<Product> products = productSearchRepository.findByProductNameContainingIgnoreCase("A", pageable);
+		System.out.println("products: " + products.getContent());
+		return products.map(this::convertToDto);
+	}
 }
