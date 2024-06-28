@@ -1,4 +1,4 @@
-package com.vti.ecommerce.repositories;
+package com.vti.ecommerce.repositories.jpa;
 
 import java.util.Set;
 
