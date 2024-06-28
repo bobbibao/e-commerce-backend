@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vti.ecommerce.domains.entities.Coupon;
-import com.vti.ecommerce.repositories.ICouponRepository;
+import com.vti.ecommerce.repositories.jpa.ICouponRepository;
 
 @Service
 public class CouponService {

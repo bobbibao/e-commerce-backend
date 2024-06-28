@@ -16,10 +16,10 @@ import com.vti.ecommerce.domains.entities.OrderStatusHistory;
 import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.domains.entities.User;
 import com.vti.ecommerce.domains.enumeration.OrderStatus;
-import com.vti.ecommerce.repositories.IOrderRepository;
-import com.vti.ecommerce.repositories.IOrderStatusHistoryRepository;
-import com.vti.ecommerce.repositories.IProductRepository;
-import com.vti.ecommerce.repositories.IUserRepository;
+import com.vti.ecommerce.repositories.jpa.IOrderRepository;
+import com.vti.ecommerce.repositories.jpa.IOrderStatusHistoryRepository;
+import com.vti.ecommerce.repositories.jpa.IProductRepository;
+import com.vti.ecommerce.repositories.jpa.IUserRepository;
 import com.vti.ecommerce.services.IOrderService;
 import com.vti.ecommerce.services.dto.OrderDto;
 

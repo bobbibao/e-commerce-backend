@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.vti.ecommerce.domains.entities.WishList;
-import com.vti.ecommerce.repositories.IWishListRepository;
+import com.vti.ecommerce.repositories.jpa.IWishListRepository;
 import com.vti.ecommerce.services.IWishListService;
 
 @Service

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.domains.entities.User;
 import com.vti.ecommerce.domains.entities.WishList;
-import com.vti.ecommerce.repositories.IUserRepository;
+import com.vti.ecommerce.repositories.jpa.IUserRepository;
 import com.vti.ecommerce.services.IProductService;
 import com.vti.ecommerce.services.IUserService;
 import com.vti.ecommerce.services.IWishListService;

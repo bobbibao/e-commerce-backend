@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vti.ecommerce.domains.entities.RestockHistory;
-import com.vti.ecommerce.repositories.IRestockHistoryRepository;
+import com.vti.ecommerce.repositories.jpa.IRestockHistoryRepository;
 import com.vti.ecommerce.services.IRestockHistoryService;
 
 @Service

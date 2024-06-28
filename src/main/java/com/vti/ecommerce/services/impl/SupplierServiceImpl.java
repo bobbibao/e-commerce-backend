@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.vti.ecommerce.domains.entities.Supplier;
-import com.vti.ecommerce.repositories.ISupplierRepository;
+import com.vti.ecommerce.repositories.jpa.ISupplierRepository;
 import com.vti.ecommerce.services.ISupplierService;
 
 @Service
