@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vti.ecommerce.domains.entities.Coupon;
 import com.vti.ecommerce.domains.entities.Inventory;
 import com.vti.ecommerce.domains.entities.Order;
 import com.vti.ecommerce.domains.entities.OrderDetail;
@@ -16,6 +17,7 @@ import com.vti.ecommerce.domains.entities.OrderStatusHistory;
 import com.vti.ecommerce.domains.entities.Product;
 import com.vti.ecommerce.domains.entities.User;
 import com.vti.ecommerce.domains.enumeration.OrderStatus;
+import com.vti.ecommerce.repositories.jpa.ICouponRepository;
 import com.vti.ecommerce.repositories.jpa.IOrderRepository;
 import com.vti.ecommerce.repositories.jpa.IOrderStatusHistoryRepository;
 import com.vti.ecommerce.repositories.jpa.IProductRepository;
@@ -38,12 +40,8 @@ public class OrderServiceImpl implements IOrderService{
     @Autowired
     private IOrderStatusHistoryRepository orderStatusHistoryRepository;
 
-    public OrderServiceImpl(IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IOrderStatusHistoryRepository orderStatusHistoryRepository) {
-        this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-        this.productRepository = productRepository;
-        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
-    }
+    @Autowired
+    private ICouponRepository couponRepository;
 //    @Override
 //    public OrderDto getOrder(Long orderID) {
 //        Order order = orderRepository.findById(orderID);
@@ -99,6 +97,7 @@ public class OrderServiceImpl implements IOrderService{
    public Order convertToOrder(OrderDto orderDto) {
         Order order = new Order();
         User user = userRepository.findById(orderDto.getUserId()).get();
+
         order.setOrderID(orderDto.getId());
         order.setUser(user);
         order.setOrderTotal(orderDto.getSubtotal());
@@ -131,6 +130,13 @@ public class OrderServiceImpl implements IOrderService{
                 }
             ).collect(Collectors.toList())
         );
+
+        Coupon coupon = couponRepository.findByCode(orderDto.getCouponCode());
+        if (coupon != null) {
+            coupon.setUsageLimit(coupon.getUsageLimit() - 1);
+            order.setCoupon(coupon);
+            couponRepository.save(coupon);
+        }
             
         return order;
    }
