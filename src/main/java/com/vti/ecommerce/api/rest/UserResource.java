@@ -138,7 +138,7 @@ public class UserResource {
 
 	@PutMapping("/{id}/role")
 	public ResponseEntity updateRole(@PathVariable String id, @RequestBody Map<String, Object> role) {
-		System.out.println(role);
+		System.out.println(role.get("role"));
 		Map<String, Object> response = new HashMap<>();
 		response.put("success", userService.updateUserRole(id, (String) role.get("role")));
 		return ResponseEntity.ok(response);

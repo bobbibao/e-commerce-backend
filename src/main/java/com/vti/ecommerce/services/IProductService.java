@@ -22,4 +22,5 @@ public interface IProductService extends IBaseService<ProductDto, Long>{
     String uploadFile(MultipartFile file) throws IOException;
     void importProducts(List<ProductImport> productImports, int supplierId);
     Page<ProductDto> searchProducts(String productName, int page, int size);
+    Object countProductByCategory();
 }

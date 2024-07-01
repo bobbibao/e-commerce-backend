@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -131,10 +132,11 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	public Optional<ProductDto> getById(Long p) {
 		System.out.println("ProductServiceImpl.getById()");
-		Product product = productRepository.findById(p).get();
+    	Product product = productRepository.findById(p).orElseThrow(() -> new NoSuchElementException("Product not found"));
 		int quantity = product.getInventory().getQuantityInStock();
 		int sold = product.getInventory().getQuantitySold();
 		ProductDto productDto = convertToDto(product);
+		// productSearchRepository.save(product);
 		productDto.setStock(quantity);
 		productDto.setSold(sold);
 		return Optional.of(productDto);
@@ -232,6 +234,7 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public List<ProductDto> getAll() {
+		// productSearchRepository.saveAll(productRepository.findAll());
 		return this.productRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
 	}
 
@@ -360,5 +363,10 @@ public class ProductServiceImpl implements IProductService {
 		Page<Product> products = productSearchRepository.findByProductNameContainingIgnoreCase("A", pageable);
 		System.out.println("products: " + products.getContent());
 		return products.map(this::convertToDto);
+	}
+
+	@Override
+	public Object countProductByCategory() {
+		return productRepository.countProductByCategory();
 	}
 }

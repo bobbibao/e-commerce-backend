@@ -236,11 +236,9 @@ public class UserServiceImpl implements IUserService{
 		if (user == null) {
 			return null;
 		}
-		Role newRole = new Role();
-		newRole.setRoleName(role);
 		UserRole userRole = new UserRole();
 		userRole.setUser(user);
-		userRole.setRole(newRole);
+		userRole.setRole(new Role(role));
 		user.getUserRoles().add(userRole);
 		
 		return convertUserDto(userRepository.save(user));
