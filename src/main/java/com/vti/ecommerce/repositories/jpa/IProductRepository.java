@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.vti.ecommerce.domains.entities.Product;
+import com.vti.ecommerce.domains.enumeration.ProductCategory;
 
 
 @Repository
@@ -18,12 +19,19 @@ public interface IProductRepository extends JpaRepository<Product, Long>{
 //	boolean save(Product product);
 //	boolean deleteById(Long productID);
     List<Product> findByProductNameContaining(String search);
+    List<Product> findByCategory(ProductCategory category);
+    long countByCategory(ProductCategory category);
 
-    //liệt kê số lượng tương ứng của tất cả loại sản phẩm tồn tại
-    @Query(value = "SELECT category_id, COUNT(*) as count FROM product GROUP BY category_id", nativeQuery = true)
-    List<Map<String, Object>> countProductByCategory();
+    //liệt kê số lượng sản phẩm theo từng loại sản phẩm
+    @Query("SELECT p.category AS category, COUNT(p) AS count FROM Product p GROUP BY p.category")
+    List<Map<String, Integer>> countProductByCategory();
 
-    //sold:
+    //Thống kê tôn kho/ đã bán của từng loại sản phẩm
+    // @Query(value = "SELECT p.category AS category, SUM(od.quantity) AS count FROM Product p JOIN p.orderDetails od GROUP BY p.category")
+    // @Query(value = "SELECT p.category AS category, SUM(od.quantity) AS count FROM Product p JOIN OrderDetail od ON p.id = od.product.id GROUP BY p.category")
+    @Query(value = "SELECT p.category as category, SUM(p.inventory.quantitySold) as sold, SUM(p.inventory.quantityInStock) as stock FROM Product p GROUP BY p.category")
+    List<Map<String, Object>> countProductSoldAndStockByCategory();
+
     //liệt kê số lượng sản phẩm đã bán được theo từng id sản phẩm
     @Query(value = "SELECT product_id, SUM(quantity) as count FROM order_detail GROUP BY product_id", nativeQuery = true)
     List<Map<String, Object>> countProductSold();
@@ -36,4 +44,5 @@ public interface IProductRepository extends JpaRepository<Product, Long>{
     //tổng số lượng sản phẩm đã bán (quantity_sold) của :product_id
     @Query(value = "SELECT quantity_in_stock FROM inventories WHERE product_id = :product_id", nativeQuery = true)
     int countProductSold(Long product_id);
+
 }
