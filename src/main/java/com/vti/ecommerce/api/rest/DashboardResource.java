@@ -26,4 +26,9 @@ public class DashboardResource {
     public Object countByGender(@RequestParam String gender) {
         return dashboardService.countByGender(gender);
     }
+
+    @GetMapping("/count-product-by-category")
+    public Object countProductByCategory() {
+        return dashboardService.countProductByCategory();
+    }
 }
